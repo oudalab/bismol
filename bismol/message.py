@@ -17,3 +17,6 @@ class Message():
 		seq = ('From ', self.url, ' (', self.source, ') at ', self.timestamp.strftime("%Y-%m-%d %H:%M:%S"), '.',
 		' Location: ', self.geocode, '.\n', 'Message Body: ', self.text)
 		return ''.join(seq)
+
+	def send(self):
+		'''Fill in send method. Sends a message to queue (or whatever we are using)'''
