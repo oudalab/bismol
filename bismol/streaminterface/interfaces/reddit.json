@@ -1,0 +1,8 @@
+{
+  "name": "reddit",
+  "mapping": [
+    {"created_utc": "timeStamp"},
+    {"permalink": "URL"},
+    {"title": "text"}	
+  ]
+}

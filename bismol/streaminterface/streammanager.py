@@ -1,6 +1,8 @@
 import csv
 import os
 import json
+import pandas
+
 #from normalizer import Normalizer
 ######fix import so I can import message from parent directory######
 
@@ -9,9 +11,6 @@ if __name__ == "__main__":
 
 	#Get the path of the interfaces
 	filePath = os.path.join(os.getcwd(), "interfaces")
-
-	#Create an object to easily access the data
-	#pandasobj = pandas.open(datapath)
 
 	#Loop over each interface file in the directory
 	for interface in os.listdir(filePath):
@@ -27,10 +26,12 @@ if __name__ == "__main__":
 			dataPath =  os.path.join(os.path.dirname(os.path.dirname(filePath)), "data", nameOfFile)
 			
 			#Create an object to easily access the data
-			#pandasobj = pandas.open(datapath)
+			pandasobj = pandas.read_csv(dataPath)
 
 			#Loop over each row of the data
-			#for row in pandasobj:
+			for i, row in enumerate(pandasobj.values):
+
+				#print i, row
 
 				#Create our message object
 				#message = Message()
@@ -39,7 +40,7 @@ if __name__ == "__main__":
 				mappingObject =  json.load(open(configPath))
 
 				#Set the source of the message -- will be the same for every interface
-				message.source = mappingObject["name"]
+				#message.source = mappingObject["name"]
 
 				#Loop over each mapping attribute, getting both the key and value
 				for mapping in mappingObject["mapping"]:

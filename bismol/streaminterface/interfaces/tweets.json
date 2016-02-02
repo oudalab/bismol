@@ -1,0 +1,8 @@
+{
+  "name": "twitter",
+  "mapping": [
+    {"timestamp": "timeStamp"},
+    {"tweet_id": "URL"},
+    {"text": "text"}
+  ]
+}
