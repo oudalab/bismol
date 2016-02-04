@@ -1,7 +1,7 @@
 {
   "name": "neel",
   "hasHeader": false,
-  "delimiter": "\t",
+  “delimiter”: ‘\t’,
   "mapping": [
     {"0": "URL"},
     {"1": "text"}

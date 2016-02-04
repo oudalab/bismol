@@ -46,15 +46,12 @@ def streammanager(mapping, dataFile):
 	#Check if the mapping has a header
 	hasHeader = mappingObject["hasHeader"]
 
-	isTSV = mappingObject["isTSV"]
+	#isTSV = mappingObject["isTSV"]
 
 	#Open up our data file and read it
 	with io.open(dataPath, encoding="utf-8") as dataFile:
-		if isTSV:
-			dataReader = unicode_csv_reader(dataFile, delimiter='\t')
-		else:
-			dataReader = unicode_csv_reader(dataFile)
-
+		dataReader = unicode_csv_reader(dataFile, delimiter=mappingObject["delimiter"].encode("ascii"))
+		
 		#If the object has a header
 		if hasHeader:
 			#Get the header row

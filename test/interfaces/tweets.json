@@ -1,7 +1,7 @@
 {
   "name": "twitter",
   "hasHeader": true,
-  "isTSV": false,
+  "delimiter": ",",
   "mapping": [
     {"timestamp": "timeStamp"},
     {"tweet_id": "URL"},
