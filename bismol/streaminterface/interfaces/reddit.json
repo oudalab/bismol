@@ -1,5 +1,6 @@
 {
   "name": "reddit",
+  "hasHeader": true,
   "mapping": [
     {"created_utc": "timeStamp"},
     {"permalink": "URL"},

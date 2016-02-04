@@ -1,54 +1,67 @@
-import csv
+#import csv
+import unicodecsv as csv
 import os
 import json
-import pandas
+import sys
+import io
 
-#from normalizer import Normalizer
-######fix import so I can import message from parent directory######
 
-"""This file is the main 'runner' of the data. It takes all the data sources and interface files, takes their data, normalizes it and puts it in a message object and sends it."""
-if __name__ == "__main__":
+#hack to fix import
+sys.path.append("..")
 
-	#Get the path of the interfaces
+from streaminterface.normalizer import normalize
+from message import Message
+
+"""This is the stream manager generator. It takes a mapping json file (without the file extension) located in the interfaces folder and a data file with the extension that's located in the data directory"""
+def streammanager(mapping, dataFile):
+
+	#Get the path of the interface
 	filePath = os.path.join(os.getcwd(), "interfaces")
 
-	#Loop over each interface file in the directory
-	for interface in os.listdir(filePath):
+	#get the paths for the config file and the data file
+	interfacePath = os.path.join(filePath, mapping + ".json")
+	dataPath =  os.path.join(os.path.dirname(os.path.dirname(filePath)), "data", dataFile)
+	
+	#Load up our Json file into an object
+	mappingObject =  json.load(open(interfacePath))
 
-		#Make sure we are looking at just JSON files
-		if interface[-4:] == "json":
+	#Check if the mapping has a header
+	hasHeader = mappingObject["hasHeader"]
 
-			#Get the name of the data file we want
-			nameOfFile = interface[:-5] + ".csv"
+	#Open up our data file and read it
+	with io.open(dataPath, encoding="utf-8") as dataFile:
+		dataReader = csv.reader(dataFile)
 
-			#get the paths for the config file and the data file
-			configPath = os.path.join(filePath, interface)
-			dataPath =  os.path.join(os.path.dirname(os.path.dirname(filePath)), "data", nameOfFile)
-			
-			#Create an object to easily access the data
-			pandasobj = pandas.read_csv(dataPath)
+		#If the object has a header
+		if hasHeader:
+			#Get the header row
+			headerRow = dataReader.next()
 
-			#Loop over each row of the data
-			for i, row in enumerate(pandasobj.values):
+			#Create and populate our dictionary mapping header values to index
+			headerToIndex = {}
+			for mapping in mappingObject["mapping"]:
+				for key, value in mapping.iteritems():
+					headerToIndex[key] = headerRow.index(key)
 
-				#print i, row
+		#Loop over each row of the data
+		for row in dataReader:
 
-				#Create our message object
-				#message = Message()
+			#Create our message object
+			message = Message()
+	
+			#Set the source of the message -- will be the same for every interface
+			message.source = mappingObject["name"]
 
-				#Load up our Json file into an object
-				mappingObject =  json.load(open(configPath))
+			#Loop over each mapping attribute, getting both the key and value
+			for mapping in mappingObject["mapping"]:
+				for key, value in mapping.iteritems():
 
-				#Set the source of the message -- will be the same for every interface
-				#message.source = mappingObject["name"]
-
-				#Loop over each mapping attribute, getting both the key and value
-				for mapping in mappingObject["mapping"]:
-					for key, value in mapping.iteritems():
-
+					if hasHeader:
 						#Set the appropriate field on the message object to our normalized value from the csv row
-						#setattr(message, value, normalize(pandasobj.value(key), value))
-						print key, value
+						setattr(message, value, normalize(row[headerToIndex[key]], value))
 
-				#So now our message is complete so send it off
-				#message.send()
+					else:
+						setattr(message, value, normalize(row[int(key)], value))
+
+			#So now our message is complete so return it
+			yield message
