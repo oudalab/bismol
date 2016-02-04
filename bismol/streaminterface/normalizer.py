@@ -1,14 +1,14 @@
-import gmtime
+import time
 
-def normalize(valueToNomalize, keyToBeNormalizedFor):
+def normalize(valueToNormalize, keyToBeNormalizedFor):
 
 	if keyToBeNormalizedFor == "URL":
-		return valueToNomalize.encode('ascii',errors='ignore')
+		return valueToNormalize.encode('ascii',errors='ignore')
 	elif keyToBeNormalizedFor == "timeStamp":
-		if type(valueToBeNormalizedFor) is int:
-			return gmtime(valueToBeNormalizedFor)
+		if type(valueToNormalize) is int:
+			return gmtime(valueToNormalize)
 		else:
-			return valueToNomalize.encode('ascii',errors='ignore')
+			return valueToNormalize.encode('ascii',errors='ignore')
 	else:
-		return valueToNomalize.encode('ascii',errors='ignore')
+		return valueToNormalize.encode('ascii',errors='ignore')
 

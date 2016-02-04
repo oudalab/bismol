@@ -23,14 +23,14 @@ def streammanager(mapping, dataFile):
 	dataPath =  os.path.join(os.path.dirname(os.path.dirname(filePath)), "data", dataFile)
 	
 	#Load up our Json file into an object
-	mappingObject =  json.load(open(interfacePath))
+	mappingObject =  json.load(io.open(interfacePath, encoding="utf-8"), encoding="utf-8")
 
 	#Check if the mapping has a header
 	hasHeader = mappingObject["hasHeader"]
 
 	#Open up our data file and read it
 	with io.open(dataPath, encoding="utf-8") as dataFile:
-		dataReader = csv.reader(dataFile)
+		dataReader = csv.reader(dataFile, encoding="utf-8")
 
 		#If the object has a header
 		if hasHeader:
