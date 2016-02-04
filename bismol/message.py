@@ -2,7 +2,7 @@ import datetime
 
 class Message():
 	'''Encapsulates the message data used in the program internally'''
-	def __init__(self, url = '', source = '', text = '', geocode = '', timestamp = datetime.datetime.now()):
+	def __init__(self, url = u'', source = u'', text = u'', geocode = u'', timestamp = datetime.datetime.now()):
 		'''Constructor'''
 		self.url = url
 		self.source = source

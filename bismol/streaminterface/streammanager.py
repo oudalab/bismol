@@ -1,5 +1,5 @@
-#import csv
-import unicodecsv as csv
+import csv
+#import unicodecsv as csv
 import os
 import json
 import sys
@@ -11,6 +11,17 @@ sys.path.append("..")
 
 from streaminterface.normalizer import normalize
 from message import Message
+
+def unicode_csv_reader(unicode_csv_data, dialect=csv.excel, **kwargs):
+    # csv.py doesn't do Unicode; encode temporarily as UTF-8:
+    csv_reader = csv.reader(utf_8_encoder(unicode_csv_data), dialect=dialect, **kwargs)
+    for row in csv_reader:
+        # decode UTF-8 back to Unicode, cell by cell:
+        yield [unicode(cell, 'utf-8') for cell in row]
+
+def utf_8_encoder(unicode_csv_data):
+    for line in unicode_csv_data:
+        yield line.encode('utf-8')
 
 """This is the stream manager generator. It takes a mapping json file (without the file extension) located in the interfaces folder and a data file with the extension that's located in the data directory"""
 def streammanager(mapping, dataFile):
@@ -30,7 +41,8 @@ def streammanager(mapping, dataFile):
 
 	#Open up our data file and read it
 	with io.open(dataPath, encoding="utf-8") as dataFile:
-		dataReader = csv.reader(dataFile, encoding="utf-8")
+		#dataReader = csv.reader(dataFile, encoding="utf-8")
+		dataReader = unicode_csv_reader(dataFile)
 
 		#If the object has a header
 		if hasHeader:
