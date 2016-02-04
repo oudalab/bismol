@@ -1,0 +1,9 @@
+{
+  "name": "neel",
+  "hasHeader": false,
+  "isTSV": true,
+  "mapping": [
+    {"0": "URL"},
+    {"1": "text"}
+  ]
+}

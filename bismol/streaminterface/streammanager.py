@@ -1,17 +1,19 @@
 import csv
-#import unicodecsv as csv
 import os
 import json
 import sys
 import io
+import pdb
 
 
 #hack to fix import
 sys.path.append("..")
 
-from streaminterface.normalizer import normalize
-from message import Message
+from bismol.streaminterface.normalizer import normalize
+from bismol.message import Message
 
+#Copied from https://docs.python.org/2/library/csv.html
+#Required for reading unicode csv
 def unicode_csv_reader(unicode_csv_data, dialect=csv.excel, **kwargs):
     # csv.py doesn't do Unicode; encode temporarily as UTF-8:
     csv_reader = csv.reader(utf_8_encoder(unicode_csv_data), dialect=dialect, **kwargs)
@@ -31,7 +33,12 @@ def streammanager(mapping, dataFile):
 
 	#get the paths for the config file and the data file
 	interfacePath = os.path.join(filePath, mapping + ".json")
-	dataPath =  os.path.join(os.path.dirname(os.path.dirname(filePath)), "data", dataFile)
+	
+	#pdb.set_trace()
+
+	#print os.path.dirname(os.path.realpath(__file__))
+
+	dataPath =  os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), "data", dataFile)
 	
 	#Load up our Json file into an object
 	mappingObject =  json.load(io.open(interfacePath, encoding="utf-8"), encoding="utf-8")
@@ -39,10 +46,14 @@ def streammanager(mapping, dataFile):
 	#Check if the mapping has a header
 	hasHeader = mappingObject["hasHeader"]
 
+	isTSV = mappingObject["isTSV"]
+
 	#Open up our data file and read it
 	with io.open(dataPath, encoding="utf-8") as dataFile:
-		#dataReader = csv.reader(dataFile, encoding="utf-8")
-		dataReader = unicode_csv_reader(dataFile)
+		if isTSV:
+			dataReader = unicode_csv_reader(dataFile, delimiter='\t')
+		else:
+			dataReader = unicode_csv_reader(dataFile)
 
 		#If the object has a header
 		if hasHeader:
@@ -75,5 +86,5 @@ def streammanager(mapping, dataFile):
 					else:
 						setattr(message, value, normalize(row[int(key)], value))
 
-			#So now our message is complete so return it
+			#So now our message is complete so yield it as per a generator
 			yield message
