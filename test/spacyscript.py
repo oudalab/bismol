@@ -4,9 +4,13 @@
 # code to use the streammanager
 import sys
 sys.path.append('..')
-from streaminterface import streammanager
+import bismol
+from bismol import streaminterface
+from bismol.streaminterface import streammanager
+from bismol.streaminterface.streammanager import streammanager
+#import Message
 #
-#for message in streammanager.streammanager("reddit", "reddit.csv"):
+#for message in streammanager("reddit", "reddit.csv"):
 #	print message
 
 import spacy
@@ -15,7 +19,7 @@ from spacy.parts_of_speech import PROPN
 from spacy.parts_of_speech import NOUN
 
 print "setting up nlp..."
-nlp = spacy.en.English()
+#nlp = spacy.en.English()
 print "done."
 
 def get_docs():
@@ -24,6 +28,8 @@ def get_docs():
 	# TODO return using message objects
 	#return ['Erik Holbrook is a cool guy','President Obama is also a cool guy.',
 	#	'Peyton Manning won the Super Bowl last night.', 'He likes ice cream cold.']
+	for message in streammanager("neel","NEEL2016-training.tsv"):
+		print message.text
 	
 
 docs = get_docs()
