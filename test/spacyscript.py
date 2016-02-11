@@ -19,7 +19,7 @@ from spacy.parts_of_speech import PROPN
 from spacy.parts_of_speech import NOUN
 
 print "setting up nlp..."
-#nlp = spacy.en.English()
+nlp = spacy.en.English()
 print "done."
 
 def get_docs():
@@ -28,8 +28,10 @@ def get_docs():
 	# TODO return using message objects
 	#return ['Erik Holbrook is a cool guy','President Obama is also a cool guy.',
 	#	'Peyton Manning won the Super Bowl last night.', 'He likes ice cream cold.']
+	docs = []
 	for message in streammanager("neel","NEEL2016-training.tsv"):
-		print message.text
+		docs.append(message)
+	return docs
 	
 
 docs = get_docs()
@@ -37,9 +39,7 @@ docs = get_docs()
 # but there are a few different ways to do that, so lets compare them.
 for unparsed_doc in docs:
 	# first, tag and entity the string
-	doc = nlp(unparsed_doc.decode('utf8'), parse=False)
-	print "----------------------------------------------------"
-	print "using spacy's Named Entity Recognizer:"
+	doc = nlp(unparsed_doc.text, parse=False)
 	for ent in doc.ents:
 		print ent.string+',',
 	print
