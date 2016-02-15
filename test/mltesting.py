@@ -13,6 +13,8 @@ from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.svm import SVC
 # using to get data object
 import pickle
+# using this library to create classification list
+import itertools
 
 # for now, I'm not going to worry about splitting/ testing
 # hopefully I can structure it in a way that makes that easy in the future
