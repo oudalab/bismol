@@ -32,7 +32,7 @@ def get_docs():
 	for message in streammanager("neel","NEEL2016-training.tsv"):
 		docs.append(message)
 	return docs
-	
+
 
 docs = get_docs()
 # goal is to just print out all the proper nouns
@@ -43,5 +43,3 @@ for unparsed_doc in docs:
 	for ent in doc.ents:
 		print ent.string+',',
 	print
-	
-	
