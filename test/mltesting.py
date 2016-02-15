@@ -3,6 +3,8 @@
 # with dict structure as follows:
 # tweets[topic] = list of tweet text strings that correspond to that topic
 
+# testing stuff
+from sklean import cross_validation
 # our primary vectorizer
 from sklearn.feature_extraction.text import CountVectorizer
 # for tfidf stuff
@@ -45,3 +47,6 @@ if __name__ == '__main__':
 
     clf = SVC()
     clf.fit(tfidf, master_class)
+
+    scores = cross_validation.cross_val_score(clf, tfidf, master_class, cv=5)
+    print scores
