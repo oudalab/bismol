@@ -4,7 +4,7 @@
 # tweets[topic] = list of tweet text strings that correspond to that topic
 
 # testing stuff
-from sklean import cross_validation
+from sklearn import cross_validation
 # our primary vectorizer
 from sklearn.feature_extraction.text import CountVectorizer
 # for tfidf stuff
