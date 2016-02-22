@@ -15,6 +15,7 @@ if(len(sys.argv) > 2 and sys.argv[2] == "-remote"):
 	matplotlib.use('GTK')
 import matplotlib.pyplot as plt
 import csv
+import json
 
 #accept file arg
 filename = sys.argv[1]
@@ -33,12 +34,16 @@ print repr(vectors)
 X_reduced = TruncatedSVD(n_components=50, random_state=0).fit_transform(vectors)
 #run tsne, convert to two dimensions
 X_embedded = TSNE(n_components=2, perplexity=40, verbose=2).fit_transform(X_reduced)
+X_dict = dict(X_embedded)
 
-trustworthiness = trustworthiness(vectors, X_embedded)
-print "trustworthiness: {}".format(trustworthiness)
+with open("EmbeddedData.json", mode="w") as f:
+	json.dump(X_dict, f)
+
+trust = trustworthiness(vectors, X_embedded)
+print "Trustworthiness: {}".format(trust)
 
 #plot the data
-fig = plt.figure(figsize=(10, 10))
+'''fig = plt.figure(figsize=(10, 10))
 ax = plt.axes(frameon=False)
 plt.setp(ax, xticks=(), yticks=())
 #plt.subplots_adjust(left=0.0, bottom=0.0, right=1.0, top=0.9,
@@ -78,4 +83,4 @@ def on_move(event):
 
 on_move_id = fig.canvas.mpl_connect('motion_notify_event', on_move)
 
-plt.show()
+plt.show()'''
