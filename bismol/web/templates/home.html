@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Tweet Displayer</title>
+		<style type="text/css">
+			
+			html {
+				height: 100%;
+			}
+
+			body {
+				height: 100%;
+			}
+
+			#sidebar {
+				width: 20%;
+				height: 100%;
+				float: right;
+			}
+
+			#map {
+				width: 80%;
+				height: 100%;
+    				background-color: #CCC;
+				float: left;
+  			}
+		</style>
+	</head>
+	<body>
+
+		<div id="map"></div>
+
+		<div id="sidebar">
+			<ul>
+				<li>Test</li>
+			</ul>
+		</div>
+
+		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+		<script type="text/javascript" charset="utf-8">
+			var map;
+			
+			function initMap() {
+				map = new google.maps.Map(document.getElementById('map'), {
+					center: {lat: 40.397, lng: -100.644},
+					zoom: 5
+				});
+			}
+			
+			var socket = io.connect('http://' + document.domain + ':' + location.port);
+			socket.on('connect', function() {
+				socket.emit('my event', {data: 'I\'m connected!'});	
+			});
+
+			socket.on('new message', function(data) {
+				console.log(data);
+				var marker = new google.maps.Marker({
+                                    position: {lat: data["lat"], lng: data["long"]},
+                                    map: map,
+  	                            title: 'Hello World!'
+                        	});
+			});
+		</script>
+		<script src="//maps.googleapis.com/maps/api/js?callback=initMap" async defer></script>
+	</body>
+</html>

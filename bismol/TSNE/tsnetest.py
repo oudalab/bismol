@@ -16,17 +16,15 @@ if(len(sys.argv) > 2 and sys.argv[2] == "-remote"):
 import matplotlib.pyplot as plt
 import csv
 import json
-import io
-sys.path.append("..")
-import bismol
-from bismol import streaminterface
-from bismol.streaminterface import streammanager
-from bismol.streaminterface.streammanager import streammanager
+from streammanager import streammanager
 
 #accept file arg
 filename = sys.argv[1]
 data = []
 #read through .tsv file, saving the text into data array
+'''with open(filename) as tsv:
+	for line in csv.reader(tsv, delimiter='\t'):
+                data.append(line[1])'''
 for message in streammanager("neel", filename):
 	data.append(message.text)
 
@@ -41,14 +39,14 @@ X_reduced = TruncatedSVD(n_components=50, random_state=0).fit_transform(vectors)
 X_embedded = TSNE(n_components=2, perplexity=40, verbose=2).fit_transform(X_reduced)
 X_dict = dict(X_embedded)
 
-'''with io.open("EmbeddedData.json", mode="w", encoding="utf-8") as f:
-	json.dump(X_dict, f, ensure_ascii=False, encoding="utf-8")'''
+'''with open("EmbeddedData.json", mode="w") as f:
+	json.dump(X_dict, f)'''
 
 trust = trustworthiness(vectors, X_embedded)
 print "Trustworthiness: {}".format(trust)
 
 #plot the data
-'''fig = plt.figure(figsize=(10, 10))
+fig = plt.figure(figsize=(10, 10))
 ax = plt.axes(frameon=False)
 plt.setp(ax, xticks=(), yticks=())
 
@@ -85,4 +83,4 @@ def on_move(event):
 
 on_move_id = fig.canvas.mpl_connect('motion_notify_event', on_move)
 
-plt.show()'''
+plt.show()
