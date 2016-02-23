@@ -14,8 +14,22 @@
 			    stroke: black;
 			    fill: none;
 			}
+			div.tooltip {
+				position: absolute;
+				visibility: hidden;
+				text-align: center;
+				padding: 2px;
+				font: 12px sans-serif;
+				background: lightsteelblue;
+				border: 0px;
+				border-radius: 8px;
+			}
 			circle {
 			    fill: steelblue;
+			}
+			circle.dragging {
+			  fill: red;
+			  stroke: brown;
 			}
 		</style>
 		<script type="text/javascript" src="http://mbostock.github.com/d3/d3.v2.js"></script>
