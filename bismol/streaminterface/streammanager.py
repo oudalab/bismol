@@ -5,12 +5,11 @@ import sys
 import io
 import pdb
 
-
 #hack to fix import
 sys.path.append("..")
 
-from bismol.streaminterface.normalizer import normalize
-from bismol.message import Message
+from streaminterface.normalizer import normalize
+from message import Message
 
 #Copied from https://docs.python.org/2/library/csv.html
 #Required for reading unicode csv
