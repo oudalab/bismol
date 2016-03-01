@@ -93,4 +93,4 @@ if __name__ == '__main__':
     tweets['ongoing_events'] = ongoing_events
     tweets['memes'] = memes
     tweets['commemoratives'] = commemoratives
-    pickle.dump(tweets, gzip.open("data/TT-classification/tweets.p", 'wb'))
+    pickle.dump(tweets, gzip.open("data/TT-classification/tweets3.p", 'wb'))
