@@ -5,6 +5,8 @@ import auth as AUTH
 import pickle
 # of course also importing csv to read files
 import csv
+# compression stuff
+import gzip
 
 def get_tweet(api, array, id):
     # note that the api call actually returns an array of length 1,
@@ -13,7 +15,7 @@ def get_tweet(api, array, id):
     tweet_result = api.statuses_lookup([id])
     # if we got some tweets, put them into the array
     for t in tweet_result:
-        array.append(t.text)
+        array.append(t)
 
 def get_tweets(api, array, file):
     # 2.0 method of above that simplifies and allows multiple calls
@@ -27,13 +29,13 @@ def get_tweets(api, array, file):
             if len(queue) == 100:
                 tweet_result = api.statuses_lookup(queue)
                 for t in tweet_result:
-                    array.append(t.text)
+                    array.append(t)
                 queue = []
         # once the main loop is done, there may be some more tweets left
         if len(queue) > 0:
             tweet_result = api.statuses_lookup(queue)
             for t in tweet_result:
-                array.append(t.text)
+                array.append(t)
             queue = []
 
 if __name__ == '__main__':
@@ -91,4 +93,4 @@ if __name__ == '__main__':
     tweets['ongoing_events'] = ongoing_events
     tweets['memes'] = memes
     tweets['commemoratives'] = commemoratives
-    pickle.dump(tweets, open("data/TT-classification/tweets.p", 'wb'))
+    pickle.dump(tweets, gzip.open("data/TT-classification/tweets.p", 'wb'))
