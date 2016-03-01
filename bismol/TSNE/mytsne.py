@@ -384,13 +384,14 @@ def _gradient_descent(objective, p0, it, n_iter, objective_error=None,
                 urls[idx] = urls[idx].replace(u'\ufeff', '')
                 tempUrl = int(urls[idx])
 
+                c.execute("UPDATE message_table SET X=?, Y=? WHERE URL=?",
+                    (embedded_array[idx][0], embedded_array[idx][1], tempUrl))
+
                 c.execute("INSERT OR IGNORE INTO message_table ('URL', 'X', 'Y', 'Text') VALUES (?, ?, ?, ?)",
                     (tempUrl, embedded_array[idx][0], embedded_array[idx][1], text[idx]))
 
-                c.execute("UPDATE message_table SET X=?, Y=?, Text=? WHERE URL=?",
-                    (embedded_array[idx][0], embedded_array[idx][1], text[idx], tempUrl))
-
             #commit changes
+            print "database modified"
             conn.commit()
 
         if new_error is not None:
