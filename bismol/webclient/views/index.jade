@@ -1,5 +1,7 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+	div(class="content")
+	script(type="text/javascript", src="http://mbostock.github.com/d3/d3.v2.js")
+	script(src="data/embeddedData.json")
+	script(type="text/javascript", src="js/scatterchart.js")
