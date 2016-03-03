@@ -1,4 +1,4 @@
-#sqlite database script to generate tables to store our data
+'''#sqlite database script to generate tables to store our data
 #store id, text, x coord, and y coord
 import sqlite3
 
@@ -24,4 +24,14 @@ c.execute("ALTER TABLE {tn} ADD COLUMN '{cn}' {ct}".format(tn = table, cn = text
 
 #commit changes and close database connection
 conn.commit()
-conn.close()
+conn.close()'''
+
+import rethinkdb as r
+
+database = "messagedb"
+table = "messages"
+
+connection = r.connect("localhost", 28015)
+
+#r.db_create(database).run(connection)
+#r.db(database).table_create(table).run(connection)

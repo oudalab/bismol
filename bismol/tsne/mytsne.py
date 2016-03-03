@@ -24,7 +24,8 @@ from sklearn.metrics.pairwise import pairwise_distances
 from sklearn.manifold import _utils
 from sklearn.manifold import _barnes_hut_tsne
 from sklearn.utils.fixes import astype
-import sqlite3
+#import sqlite3
+import rethinkdb as r
 
 MACHINE_EPSILON = np.finfo(np.double).eps
 
@@ -318,9 +319,7 @@ def _gradient_descent(objective, p0, it, n_iter, objective_error=None,
         Last iteration.
     """
     #connect to database
-    filename = "../db/database.sqlite"
-    conn = sqlite3.connect(filename)
-    c = conn.cursor()
+    conn = r.connect(host="localhost", port=28015, db="messagedb")
 
     if args is None:
         args = []
@@ -380,19 +379,24 @@ def _gradient_descent(objective, p0, it, n_iter, objective_error=None,
             #save to database every n_iterations
             embedded_array = p.reshape(n_samples, n_components)
 
+            #array of packaged message objects
+            data = []
+
+            #combine url, xy coords, and text into one object and add to data array
             for idx in range(len(urls)):
                 urls[idx] = urls[idx].replace(u'\ufeff', '')
                 tempUrl = int(urls[idx])
 
-                c.execute("UPDATE message_table SET X=?, Y=? WHERE URL=?",
-                    (embedded_array[idx][0], embedded_array[idx][1], tempUrl))
+                data.append(
+                    {
+                        "id": tempUrl,
+                        "x": embedded_array[idx][0],
+                        "y": embedded_array[idx][1],
+                        "text": text[idx]
+                    })
 
-                c.execute("INSERT OR IGNORE INTO message_table ('URL', 'X', 'Y', 'Text') VALUES (?, ?, ?, ?)",
-                    (tempUrl, embedded_array[idx][0], embedded_array[idx][1], text[idx]))
-
-            #commit changes
-            print "database modified"
-            conn.commit()
+            #insert data into the database, updating if it already exists
+            r.table("messages").insert(data, conflict="update").run(conn)
 
         if new_error is not None:
             error = new_error
