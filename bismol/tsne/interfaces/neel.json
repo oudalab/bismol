@@ -1,0 +1,9 @@
+{
+  "name": "neel",
+  "hasHeader": false,
+  "delimiter": "\t",
+  "mapping": [
+    {"0": "url"},
+    {"1": "text"}
+  ]
+}
