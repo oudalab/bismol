@@ -19,9 +19,9 @@ sys.path.append("..")
 import streaminterface
 from streaminterface import streammanager
 from streaminterface.streammanager import streammanager
-import TSNE
-from TSNE import mytsne
-from TSNE.mytsne import trustworthiness
+import tsne
+from tsne import mytsne
+from tsne.mytsne import trustworthiness
 
 #accept file arg
 filename = sys.argv[1]
