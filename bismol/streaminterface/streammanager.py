@@ -49,38 +49,68 @@ def streammanager(mapping, dataFile):
 
 	#Open up our data file and read it
 	with io.open(dataPath, encoding="utf-8") as dataFile:
-		dataReader = unicode_csv_reader(dataFile, delimiter=mappingObject["delimiter"].encode("ascii"))
+
+		if dataFile[:-3] == "csv" or dataFile[:-3] == "tsv":
+			dataReader = unicode_csv_reader(dataFile, delimiter=mappingObject["delimiter"].encode("ascii"))
 		
-		#If the object has a header
-		if hasHeader:
-			#Get the header row
-			headerRow = dataReader.next()
+			#If the object has a header
+			if hasHeader:
+				#Get the header row
+				headerRow = dataReader.next()
 
-			#Create and populate our dictionary mapping header values to index
-			headerToIndex = {}
-			for mapping in mappingObject["mapping"]:
-				for key, value in mapping.iteritems():
-					headerToIndex[key] = headerRow.index(key)
+				#Create and populate our dictionary mapping header values to index
+				headerToIndex = {}
+				for mapping in mappingObject["mapping"]:
+					for key, value in mapping.iteritems():
+						headerToIndex[key] = headerRow.index(key)
 
-		#Loop over each row of the data
-		for row in dataReader:
+			#Loop over each row of the data
+			for row in dataReader:
 
-			#Create our message object
-			message = Message()
+				#Create our message object
+				message = Message()
 	
-			#Set the source of the message -- will be the same for every interface
-			message.source = mappingObject["name"]
+				#Set the source of the message -- will be the same for every interface
+				message.source = mappingObject["name"]
 
-			#Loop over each mapping attribute, getting both the key and value
-			for mapping in mappingObject["mapping"]:
-				for key, value in mapping.iteritems():
+				#Loop over each mapping attribute, getting both the key and value
+				for mapping in mappingObject["mapping"]:
+					for key, value in mapping.iteritems():
 
-					if hasHeader:
-						#Set the appropriate field on the message object to our normalized value from the csv row
-						setattr(message, value, normalize(row[headerToIndex[key]], value))
+						if hasHeader:
+							#Set the appropriate field on the message object to our normalized value from the csv row
+							setattr(message, value, normalize(row[headerToIndex[key]], value))
 
-					else:
-						setattr(message, value, normalize(row[int(key)], value))
+						else:
+							setattr(message, value, normalize(row[int(key)], value))
 
-			#So now our message is complete so yield it as per a generator
-			yield message
+				#So now our message is complete so yield it as per a generator
+				yield message
+
+		#Otherwise our file is a JSON file
+		elif dataFile[:-4] == "json":
+
+			#Make our object
+			dataObject = json.load(dataFile)
+
+			#Make sure it has stuff in it
+			if len(dataObject) > 0:
+
+				#Loop over the stuff
+				for item in dataObject:
+
+					#Create a message
+					message = Message()
+					
+					#Set the source of the message
+					message.source = mappingObject["name"]
+	
+					#Loop over the mappings in mapping
+					for mapping in mappingObject["mapping"]:
+						for key, value in mapping.iteritems():
+
+							#For each mapping set the value to what we want
+							setattr(message, value, normalize(item[key], value))
+
+					#Yield our message
+					yield message
