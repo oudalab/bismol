@@ -4,9 +4,8 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var r = require('rethinkdb');
 var routes = require('./routes/index');
-var users = require('./routes/users');
 
 var app = express();
 
@@ -23,13 +22,27 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/users', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
+});
+
+// Connect to rethinkdb
+var connection = null;
+r.connect( {host: 'localhost', port: 28015, db: 'messagedb'}, function(err, conn) {
+    if (err) throw err;
+    connection = conn;
+    // Set up changefeed on messages table
+    r.table('messages').changes().run(connection, function(err, cursor) {
+        if (err) throw err;
+        cursor.each(function(err, row) {
+            if (err) throw err;
+            console.log(JSON.stringify(row, null, 2));
+        });
+    });
 });
 
 // error handlers
