@@ -47,10 +47,14 @@ def streammanager(mapping, dataFile):
 
 	#isTSV = mappingObject["isTSV"]
 
+	print dataPath[-3:]
+
 	#Open up our data file and read it
 	with io.open(dataPath, encoding="utf-8") as dataFile:
 
-		if dataPath[:-3] == "csv" or dataPath[:-3] == "tsv":
+		if dataPath[-3:] == "csv" or dataPath[-3:] == "tsv":
+
+			print "In here"
 			dataReader = unicode_csv_reader(dataFile, delimiter=mappingObject["delimiter"].encode("ascii"))
 		
 			#If the object has a header
@@ -88,7 +92,7 @@ def streammanager(mapping, dataFile):
 				yield message
 
 		#Otherwise our file is a JSON file
-		elif dataPath[:-4] == "json":
+		elif dataPath[-4:] == "json":
 
 			#Make our object
 			dataObject = json.load(dataFile)
