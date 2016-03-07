@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var r = require('rethinkdb');
 var routes = require('./routes/index');
-
+var sockio = require('socket.io');
 var app = express();
 
 // view engine setup
@@ -23,11 +23,24 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 
+var io = sockio.listen(app.listen(8099), {log: false});
+console.log("server started on port " + 8099);
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
+});
+
+io.on('connection', function(){
+  r.table('messages').run(connection, function(err, cursor) {
+        if (err) throw err;
+        cursor.toArray(function(err, result) {
+          if (err) throw err;
+          io.emit('connected', result);
+        });
+    });
 });
 
 // Connect to rethinkdb
@@ -40,7 +53,8 @@ r.connect( {host: 'localhost', port: 28015, db: 'messagedb'}, function(err, conn
         if (err) throw err;
         cursor.each(function(err, row) {
             if (err) throw err;
-            console.log(JSON.stringify(row, null, 2));
+            //console.log(JSON.stringify(row, null, 2));
+            io.emit('dbchanged', row);
         });
     });
 });
