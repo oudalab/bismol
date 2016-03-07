@@ -10,8 +10,14 @@
 	];
 
 	function AppController($scope) {
-		var g, chart, main, drag, zoom, tooltip;
 		var counter = 0;
+		$scope.g;
+		$scope.chart;
+		$scope.main;
+		$scope.drag;
+		$scope.zoom;
+		$scope.tooltip;
+		$scope.isCreated = false;
 		$scope.xScale;
 		$scope.yScale;
 		$scope.xAxis;
@@ -34,18 +40,18 @@
 		var socket = io.connect();
 
 		//zoom variable
-		zoom = d3.behavior.zoom()
+		$scope.zoom = d3.behavior.zoom()
 		  .scaleExtent([1, 10])
 		  .on("zoom", $scope.zoomed);
 
 		//drag/drop variable
-		drag = d3.behavior.drag()
+		$scope.drag = d3.behavior.drag()
 		  .on("dragstart", $scope.dragstarted)
 		  .on("drag", $scope.dragged)
 		  .on("dragend", $scope.dragended);
 
 		//tooltip variable
-		tooltip = d3.select("body")
+		$scope.tooltip = d3.select("body")
 		  .append("div")
 		  .attr("class", "tooltip");
 
@@ -55,15 +61,30 @@
 				$scope.data.push(message);
 			});
 
+			if ($scope.data.length > 0) {
+				$scope.isCreated = true;
+			}
+
 			$scope.drawChart();
 		});
 
 		socket.on('dbchanged', function(data) {
 			counter++;
-			console.log("change");
-		    var elementPos = $scope.data.map(function(x) {return x.id; }).indexOf(data.new_val.id);
-		    $scope.data[elementPos] = data.new_val;
-		    if(counter % $scope.data.length == 0) {
+			var elementPos = $scope.data.map(function(x) {return x.id; }).indexOf(data.new_val.id);
+
+			if(elementPos !== -1 && !$scope.isCreated) {
+				$scope.isCreated = true;
+				$scope.drawChart();
+			}
+
+			if($scope.isCreated) {
+			    $scope.data[elementPos] = data.new_val;
+			}
+			else {
+				$scope.data.push(data.new_val);
+			}
+
+		    if(counter % $scope.data.length == 0 && $scope.isCreated) {
 		    	counter = 0;
 		    	d3.select("svg").remove();
 		    	$scope.drawChart();
@@ -94,42 +115,41 @@
 
 		//draw chart
 		function drawChart() {
-			console.log("draw called");
 			$scope.createChartParameters();
 
 			//create the chart 
-			chart = d3.select('div')
+			$scope.chart = d3.select('div')
 				.append('svg:svg')
 				.attr('width', $scope.width + $scope.margin.right + $scope.margin.left)
 				.attr('height', $scope.height + $scope.margin.top + $scope.margin.bottom)
 				.attr('class', 'chart')
-			    .call(zoom);
+			    .call($scope.zoom);
 
-			main = chart.append('g')
+			$scope.main = $scope.chart.append('g')
 				.attr('transform', 'translate(' + $scope.margin.left + ',' + $scope.margin.top + ')')
 				.attr('width', $scope.width)
 				.attr('height', $scope.height)
 				.attr('class', 'main');
 
-			main.append('g')
+			$scope.main.append('g')
 				.attr('transform', 'translate(0,' + ($scope.height - $scope.padding) + ')')
 				.attr('class', 'main axis')
 				.call($scope.xAxis);
 
-			main.append('g')
+			$scope.main.append('g')
 				.attr('transform', 'translate(' + $scope.padding + ',0)')
 				.attr('class', 'main axis')
 				.call($scope.yAxis);
 
-			g = main.append("svg:g"); 
-			g.selectAll("scatter-dots")
+			$scope.g = $scope.main.append("svg:g"); 
+			$scope.g.selectAll("scatter-dots")
 			  .data($scope.data)
 			  .enter()
 			  .append("circle")
 			  .attr("cx", function (d) { return $scope.xScale(d.x); })
 			  .attr("cy", function (d) { return $scope.yScale(d.y); })
 			  .attr("r", 3)
-			  .call(drag)
+			  .call($scope.drag)
 			  .on("mouseover", $scope.mouseover)
 			  .on("mousemove", $scope.mousemove)
 			  .on("mouseout", $scope.mouseout);
@@ -160,16 +180,16 @@
 
 		//mouseover functions for tooltip
 		function mouseover(d) {
-		  tooltip.style("visibility", "visible");
+		  $scope.tooltip.style("visibility", "visible");
 		}
 
 		function mousemove(d) {
-		  tooltip.text(d.text);
-		  tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");
+		  $scope.tooltip.text(d.text);
+		  $scope.tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");
 		}
 
 		function mouseout(d) {
-		  tooltip.style("visibility", "hidden");
+		  $scope.tooltip.style("visibility", "hidden");
 		}
 	}
 })();
