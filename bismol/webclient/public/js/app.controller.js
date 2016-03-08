@@ -11,148 +11,193 @@
 
 	function AppController($scope) {
 		var counter = 0;
-		$scope.g;
-		$scope.chart;
-		$scope.main;
-		$scope.drag;
-		$scope.zoom;
-		$scope.tooltip;
-		$scope.isCreated = false;
-		$scope.xScale;
-		$scope.yScale;
-		$scope.xAxis;
-		$scope.yAxis;
-		$scope.data = [];
-		$scope.margin = {top: 20, right: 15, bottom: 60, left: 60};
-		$scope.width = window.innerWidth * (5/6);
-		$scope.height = window.innerHeight * (5/6);
-		$scope.padding = 10;
-		$scope.createChartParameters = createChartParameters;
-		$scope.drawChart = drawChart;
-		$scope.zoomed = zoomed;
-		$scope.dragstarted = dragstarted;
-		$scope.dragged = dragged;
-		$scope.dragended = dragended;
-		$scope.mouseover = mouseover;
-		$scope.mousemove = mousemove;
-		$scope.mouseout = mouseout;
+		var drag;
+		var zoom;
+		var tooltip;
+		var isCreated = false;
+		var xScale;
+		var yScale;
+		var xAxis;
+		var yAxis;
+		var dataset = [];
+		var width = window.innerWidth * (5/6);
+		var height = window.innerHeight * (5/6);
+		var padding = 30;
+		var drawChart = drawChart;
+		var updateChart = updateChart;
+		var zoomed = zoomed;
+		var dragstarted = dragstarted;
+		var dragged = dragged;
+		var dragended = dragended;
+		var mouseover = mouseover;
+		var mousemove = mousemove;
+		var mouseout = mouseout;
+		var svg;
+		var main;
 
 		var socket = io.connect();
 
 		//zoom variable
-		$scope.zoom = d3.behavior.zoom()
+		zoom = d3.behavior.zoom()
 		  .scaleExtent([1, 10])
-		  .on("zoom", $scope.zoomed);
+		  .on("zoom", zoomed);
 
 		//drag/drop variable
-		$scope.drag = d3.behavior.drag()
-		  .on("dragstart", $scope.dragstarted)
-		  .on("drag", $scope.dragged)
-		  .on("dragend", $scope.dragended);
+		drag = d3.behavior.drag()
+		  .on("dragstart", dragstarted)
+		  .on("drag", dragged)
+		  .on("dragend", dragended);
 
 		//tooltip variable
-		$scope.tooltip = d3.select("body")
+		tooltip = d3.select("body")
 		  .append("div")
 		  .attr("class", "tooltip");
 
 		socket.on('connected', function(data) {
-			//cache the data on scope
+			//for each element in data (i.e., for each row in the database table)
+			//push the element onto the local dataset array
 			data.forEach(function(message) {
-				$scope.data.push(message);
+				dataset.push(message);
 			});
 
-			if ($scope.data.length > 0) {
-				$scope.isCreated = true;
+			//if the dataset is not empty (i.e., if the table had values to start)
+			//then note that the table was created and draw the initial chart
+			if (dataset.length > 0) {
+				isCreated = true;
+				drawChart();
 			}
-
-			$scope.drawChart();
 		});
 
 		socket.on('dbchanged', function(data) {
+			//counter keeps track of how many rows that node has alerted us have changed
 			counter++;
-			var elementPos = $scope.data.map(function(x) {return x.id; }).indexOf(data.new_val.id);
+			//get the index in the local dataset array corresponding to the row that was updated in the database table
+			var elementPos = dataset.map(function(x) {return x.id; }).indexOf(data.new_val.id);
 
-			if(elementPos !== -1 && !$scope.isCreated) {
-				$scope.isCreated = true;
-				$scope.drawChart();
+			//if that index is valid and we haven't marked the table as created yet,
+			//mark the table as created and draw it
+			if(elementPos !== -1 && !isCreated) {
+				isCreated = true;
+				drawChart();
 			}
 
-			if($scope.isCreated) {
-			    $scope.data[elementPos] = data.new_val;
+			//if the table is created, then we can simply update our local array with the new value
+			if(isCreated) {
+			    dataset[elementPos] = data.new_val;
 			}
+			//otherwise the table is not done yet, so push the data onto our local array
 			else {
-				$scope.data.push(data.new_val);
+				dataset.push(data.new_val);
 			}
 
-		    if(counter % $scope.data.length == 0 && $scope.isCreated) {
+			//if the counter is a multiple of the dataset length, and we're finished creating the table
+			//then we can reset ou rcounter and update the chart 
+			//this ensures that we update the chart only once once 'cycle' of database updates has been processed
+			//(i.e., once each row has finished updating, then update the chart)
+		    if(counter % dataset.length == 0 && isCreated) {
 		    	counter = 0;
-		    	d3.select("svg").remove();
-		    	$scope.drawChart();
+		    	var updates = dataset.slice();
+		    	updateChart(updates);
 		    }
 		});
 
-		//set up axes and scales
-		function createChartParameters() {
-			//create the x and y scales    
-			$scope.xScale = d3.scale.linear()
-			    .domain([d3.min($scope.data, function(d) { return d.x; }), d3.max($scope.data, function(d) { return d.x; })])
-			    .range([ $scope.padding, $scope.width - $scope.padding ]);
-
-			$scope.yScale = d3.scale.linear()
-			    .domain([d3.min($scope.data, function(d) { return d.y; }), d3.max($scope.data, function(d) { return d.y; })])
-			    .range([ $scope.height - $scope.padding, $scope.padding ]);
-
-			// draw the x axis
-			$scope.xAxis = d3.svg.axis()
-			    .scale($scope.xScale)
-				.orient('bottom');
-
-			// draw the y axis
-			$scope.yAxis = d3.svg.axis()
-				.scale($scope.yScale)
-				.orient('left');
-		}
-
 		//draw chart
 		function drawChart() {
-			$scope.createChartParameters();
+			//create scale functions
+			xScale = d3.scale.linear()
+			    .domain([d3.min(dataset, function(d) { return d.x; }), d3.max(dataset, function(d) { return d.x; })])
+			    .range([ padding, width - padding ]);
 
-			//create the chart 
-			$scope.chart = d3.select('div')
-				.append('svg:svg')
-				.attr('width', $scope.width + $scope.margin.right + $scope.margin.left)
-				.attr('height', $scope.height + $scope.margin.top + $scope.margin.bottom)
-				.attr('class', 'chart')
-			    .call($scope.zoom);
+			yScale = d3.scale.linear()
+			    .domain([d3.min(dataset, function(d) { return d.y; }), d3.max(dataset, function(d) { return d.y; })])
+			    .range([ height - padding, padding ]);
 
-			$scope.main = $scope.chart.append('g')
-				.attr('transform', 'translate(' + $scope.margin.left + ',' + $scope.margin.top + ')')
-				.attr('width', $scope.width)
-				.attr('height', $scope.height)
+			//define x and y axes
+			xAxis = d3.svg.axis()
+			    .scale(xScale)
+				.orient('bottom');
+
+			yAxis = d3.svg.axis()
+				.scale(yScale)
+				.orient('left');
+
+			//create svg element
+			svg = d3.select("div")
+				.append("svg")
+				.attr("width", width)
+				.attr("height", height)
+				.call(zoom);
+
+			//create layer on top of svg to allow zoom/pan
+			main = svg.append("g")
+				.attr('width', width)
+				.attr('height', height)
 				.attr('class', 'main');
 
-			$scope.main.append('g')
-				.attr('transform', 'translate(0,' + ($scope.height - $scope.padding) + ')')
-				.attr('class', 'main axis')
-				.call($scope.xAxis);
+		    //create circles
+			main.selectAll("circle")
+				.data(dataset)
+				.enter()
+				.append("circle")
+				.attr("cx", function (d) { return xScale(d.x); })
+				.attr("cy", function (d) { return yScale(d.y); })
+			    .attr("r", 3)
+			    .call(drag)
+			    .on("mouseover", mouseover)
+			    .on("mousemove", mousemove)
+			    .on("mouseout", mouseout);
 
-			$scope.main.append('g')
-				.attr('transform', 'translate(' + $scope.padding + ',0)')
-				.attr('class', 'main axis')
-				.call($scope.yAxis);
+			//add x axis
+			main.append("g")
+				.attr("class", "x axis")
+				.attr("transform", "translate(0," + (height - padding) + ")")
+				.call(xAxis);
 
-			$scope.g = $scope.main.append("svg:g"); 
-			$scope.g.selectAll("scatter-dots")
-			  .data($scope.data)
-			  .enter()
-			  .append("circle")
-			  .attr("cx", function (d) { return $scope.xScale(d.x); })
-			  .attr("cy", function (d) { return $scope.yScale(d.y); })
-			  .attr("r", 3)
-			  .call($scope.drag)
-			  .on("mouseover", $scope.mouseover)
-			  .on("mousemove", $scope.mousemove)
-			  .on("mouseout", $scope.mouseout);
+		    //add y axis
+			main.append("g")
+				.attr("class", "y axis")
+				.attr("transform", "translate(" + padding + ",0)")
+				.call(yAxis);
+		}
+
+		//update chart using animations
+		function updateChart(updates) {
+			//update the x and y scales
+			xScale = d3.scale.linear()
+			    .domain([d3.min(updates, function(d) { return d.x; }), d3.max(updates, function(d) { return d.x; })])
+			    .range([ padding, width - padding ]);
+
+			yScale = d3.scale.linear()
+			    .domain([d3.min(updates, function(d) { return d.y; }), d3.max(updates, function(d) { return d.y; })])
+			    .range([ height - padding, padding ]);
+
+			//update the circle positions, animation them as they go
+			main.selectAll("circle")
+			    .data(updates)
+			    .transition()
+			    .duration(1000)
+			    .attr("cx", function (d) { return xScale(d.x); })
+			    .attr("cy", function (d) { return yScale(d.y); });
+
+			//update the x and y axis values
+			xAxis = d3.svg.axis()
+			    .scale(xScale)
+				.orient('bottom');
+
+			yAxis = d3.svg.axis()
+				.scale(yScale)
+				.orient('left');
+
+			//and then animate the x and y axis changes
+			main.select(".x.axis")
+				.transition()
+				.duration(1000)
+				.call(xAxis);
+
+			main.select(".y.axis")
+				.transition()
+				.duration(1000)
+				.call(yAxis);
 		}
 
 		//handles zoom functionality
@@ -170,8 +215,8 @@
 		  d3.select(this)
 		    .attr("cx", d.x = d3.event.x)
 		    .attr("cy", d.y = d3.event.y);
-		  d.x = $scope.xScale.invert(d3.event.x);
-		  d.y = $scope.yScale.invert(d3.event.y);
+		  d.x = xScale.invert(d3.event.x);
+		  d.y = yScale.invert(d3.event.y);
 		}
 
 		function dragended(d) {
@@ -180,16 +225,16 @@
 
 		//mouseover functions for tooltip
 		function mouseover(d) {
-		  $scope.tooltip.style("visibility", "visible");
+		  tooltip.style("visibility", "visible");
 		}
 
 		function mousemove(d) {
-		  $scope.tooltip.text(d.text);
-		  $scope.tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");
+		  tooltip.text(d.text);
+		  tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");
 		}
 
 		function mouseout(d) {
-		  $scope.tooltip.style("visibility", "hidden");
+		  tooltip.style("visibility", "hidden");
 		}
 	}
 })();

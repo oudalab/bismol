@@ -376,7 +376,8 @@ def _gradient_descent(objective, p0, it, n_iter, objective_error=None,
                     print(m % (i + 1, error_diff))
                 break
 
-            #save to database every n_iterations
+        if (i + 1) % 5 == 0:
+            #save to database every so often
             embedded_array = p.reshape(n_samples, n_components)
 
             #array of packaged message objects

@@ -34,7 +34,6 @@ app.use(function(req, res, next) {
 });
 
 io.on('connection', function(){
-  /*
   r.table('messages').run(connection, function(err, cursor) {
         if (err) throw err;
         cursor.toArray(function(err, result) {
@@ -42,7 +41,6 @@ io.on('connection', function(){
           io.emit('connected', result);
         });
     });
-  */
 
   var sampleData = [
 		{'lat': 33.397, 'long': -100.644, 'title': 'Test status 1', 'dateTime': 'Today'},
@@ -72,7 +70,6 @@ io.on('connection', function(){
   }, 1000);
 });
 
-/*
 // Connect to rethinkdb
 var connection = null;
 r.connect( {host: 'localhost', port: 28015, db: 'messagedb'}, function(err, conn) {
@@ -88,7 +85,6 @@ r.connect( {host: 'localhost', port: 28015, db: 'messagedb'}, function(err, conn
         });
     });
 });
-*/
 
 // error handlers
 

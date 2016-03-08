@@ -1,6 +1,6 @@
 '''
-Local Usage: tsnetest.py test_data_file.tsv 
-Remote Usage: tsnetest.py test_data_file.tsv -remote
+Usage: python tsnetest.py file_type data_file.tsv
+Example Usage: python tsnetest.py neel NEEL2016-training.tsv
 Runs a tsne simulation on given .tsv file
 '''
 
@@ -8,9 +8,6 @@ import sys
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.decomposition import TruncatedSVD
 import numpy as np
-import matplotlib
-if(len(sys.argv) > 2 and sys.argv[2] == "-remote"):
-	matplotlib.use('GTK')
 import csv
 sys.path.append("..")
 import streaminterface
@@ -21,12 +18,20 @@ from tsne import mytsne
 from tsne.mytsne import trustworthiness
 
 #accept file arg
-filename = sys.argv[1]
+try: 
+	filetype = sys.argv[1]
+	filename = sys.argv[2]
+except:
+	print "Script run with invalid arguments"
+	print "Usage: python tsnetest.py file_type data_file.tsv"
+	print "Example Usage: python tsnetest.py neel NEEL2016-training.tsv"
+	sys.exit(2)
+
 text = []
 urls = []
 
 #read through message objects, saving text in text array
-for message in streammanager("neel", filename):
+for message in streammanager(filetype, filename):
 	text.append(message.text)
 	urls.append(message.url)
 

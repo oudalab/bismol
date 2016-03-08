@@ -16,6 +16,10 @@ a {
     font: 10px sans-serif;	
 }
 
+.axis text {
+    font: 10px sans-serif;
+}
+
 .axis line, .axis path {
     shape-rendering: crispEdges;
     stroke: black;
@@ -47,7 +51,7 @@ html {
 }
 
 #sidebar {
-  width: 20%,
+  width: 20%;
   height: 100%;
   float: right;
 }
