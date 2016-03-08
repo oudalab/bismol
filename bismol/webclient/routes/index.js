@@ -8,6 +8,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/map', function(req, res) {
+  console.log("HERRE");
   res.render('map');
 });
 
