@@ -1,8 +1,64 @@
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  height: 100%;
 }
 
 a {
   color: #00B7FF;
+}
+
+.chart {
+
+}
+
+.main text {
+    font: 10px sans-serif;	
+}
+
+.axis text {
+    font: 10px sans-serif;
+}
+
+.axis line, .axis path {
+    shape-rendering: crispEdges;
+    stroke: black;
+    fill: none;
+}
+
+div.tooltip {
+	position: absolute;
+	visibility: hidden;
+	text-align: center;
+	padding: 2px;
+	font: 12px sans-serif;
+	background: lightsteelblue;
+	border: 0px;
+	border-radius: 8px;
+}
+
+circle {
+    fill: steelblue;
+}
+
+circle.dragging {
+  fill: red;
+  stroke: brown;
+}
+
+html {
+  height: 100%;
+}
+
+#sidebar {
+  width: 20%;
+  height: 100%;
+  float: right;
+}
+
+#map {
+  width: 80%;
+  height: 100%;
+  background-color: #CCC;
+  float: left;
 }
