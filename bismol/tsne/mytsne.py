@@ -263,7 +263,7 @@ def _gradient_descent(objective, p0, it, n_iter, objective_error=None,
                       n_iter_check=1, n_iter_without_progress=50,
                       momentum=0.5, learning_rate=1000.0, min_gain=0.01,
                       min_grad_norm=1e-7, min_error_diff=1e-7, verbose=0,
-                      args=None, kwargs=None, urls = [], text = [],
+                      args=None, kwargs=None, urls = [], text = [], colors = [],
                       n_samples=0, n_components=0):
     """Batch gradient descent with momentum and individual gains.
     Parameters
@@ -388,13 +388,23 @@ def _gradient_descent(objective, p0, it, n_iter, objective_error=None,
                 urls[idx] = urls[idx].replace(u'\ufeff', '')
                 tempUrl = int(urls[idx])
 
-                data.append(
-                    {
-                        "id": tempUrl,
-                        "x": embedded_array[idx][0],
-                        "y": embedded_array[idx][1],
-                        "text": text[idx]
-                    })
+                if(len(colors) > 0):
+                    data.append(
+                        {
+                            "id": tempUrl,
+                            "x": embedded_array[idx][0],
+                            "y": embedded_array[idx][1],
+                            "text": text[idx],
+                            "color": colors[idx]
+                        })
+                else:
+                    data.append(
+                        {
+                            "id": tempUrl,
+                            "x": embedded_array[idx][0],
+                            "y": embedded_array[idx][1],
+                            "text": text[idx]
+                        })
 
             #insert data into the database, updating if it already exists
             r.table("messages").insert(data, conflict="update").run(conn)
@@ -583,7 +593,7 @@ class TSNE(BaseEstimator):
                  n_iter_without_progress=30, min_grad_norm=1e-7,
                  metric="euclidean", init="random", verbose=0,
                  random_state=None, method='barnes_hut', angle=0.5,
-                 urls=[], text=[]):
+                 urls=[], colors=[], text=[]):
         if init not in ["pca", "random"] or isinstance(init, np.ndarray):
             msg = "'init' must be 'pca', 'random' or a NumPy array"
             raise ValueError(msg)
@@ -603,6 +613,7 @@ class TSNE(BaseEstimator):
         self.embedding_ = None
         self.urls = urls
         self.text = text
+        self.colors = colors
 
     def _fit(self, X, skip_num_points=0):
         """Fit the model using X as training data.
@@ -741,7 +752,7 @@ class TSNE(BaseEstimator):
         opt_args = {"n_iter": 50, "momentum": 0.5, "it": 0,
                     "learning_rate": self.learning_rate,
                     "verbose": self.verbose, "n_iter_check": 25,
-                    "urls": self.urls, "text": self.text,
+                    "urls": self.urls, "text": self.text, "colors": self.colors,
                     "n_samples": n_samples, "n_components": self.n_components,
                     "kwargs": dict(skip_num_points=skip_num_points)}
         if self.method == 'barnes_hut':

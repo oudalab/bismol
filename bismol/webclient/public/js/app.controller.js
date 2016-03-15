@@ -11,6 +11,7 @@
 
 	function AppController($scope) {
 		var counter = 0;
+		var hasColor = false;
 		var drag;
 		var zoom;
 		var tooltip;
@@ -32,6 +33,7 @@
 		var mouseover = mouseover;
 		var mousemove = mousemove;
 		var mouseout = mouseout;
+		var toColor = toColor;
 		var svg;
 		var main;
 
@@ -63,6 +65,9 @@
 			//if the dataset is not empty (i.e., if the table had values to start)
 			//then note that the table was created and draw the initial chart
 			if (dataset.length > 0) {
+				if(dataset[0].hasOwnProperty('color')) {
+					hasColor = true;
+				}
 				isCreated = true;
 				drawChart();
 			}
@@ -77,6 +82,9 @@
 			//if that index is valid and we haven't marked the table as created yet,
 			//mark the table as created and draw it
 			if(elementPos !== -1 && !isCreated) {
+				if(dataset[0].hasOwnProperty('color')) {
+					hasColor = true;
+				}
 				isCreated = true;
 				drawChart();
 			}
@@ -135,18 +143,35 @@
 				.attr('height', height)
 				.attr('class', 'main');
 
-		    //create circles
-			main.selectAll("circle")
-				.data(dataset)
-				.enter()
-				.append("circle")
-				.attr("cx", function (d) { return xScale(d.x); })
-				.attr("cy", function (d) { return yScale(d.y); })
-			    .attr("r", 3)
-			    .call(drag)
-			    .on("mouseover", mouseover)
-			    .on("mousemove", mousemove)
-			    .on("mouseout", mouseout);
+			if(hasColor) {
+			    //create circles with color (pre-labeled data)
+				main.selectAll("circle")
+					.data(dataset)
+					.enter()
+					.append("circle")
+					.attr("cx", function (d) { return xScale(d.x); })
+					.attr("cy", function (d) { return yScale(d.y); })
+				    .attr("r", 3)
+				    .style("fill", function(d) { return toColor(d.color); })
+				    .call(drag)
+				    .on("mouseover", mouseover)
+				    .on("mousemove", mousemove)
+				    .on("mouseout", mouseout);
+			}
+			else {
+				//create circles (un-labeled data)
+				main.selectAll("circle")
+					.data(dataset)
+					.enter()
+					.append("circle")
+					.attr("cx", function (d) { return xScale(d.x); })
+					.attr("cy", function (d) { return yScale(d.y); })
+				    .attr("r", 3)
+				    .call(drag)
+				    .on("mouseover", mouseover)
+				    .on("mousemove", mousemove)
+				    .on("mouseout", mouseout);
+			}
 
 			//add x axis
 			main.append("g")
@@ -241,6 +266,41 @@
 
 		function mouseout(d) {
 		  tooltip.style("visibility", "hidden");
+		}
+
+		function toColor(d) {
+			// Kelly's 22 colors of maximum contrast in order, with white omitted
+			// (due to white background)
+			// Paper at http://www.iscc.org/pdf/PC54_1724_001.pdf
+			var kelly_colors_hex = [
+				"#000000", // Black
+			    "#FFB300", // Vivid Yellow
+			    "#803E75", // Strong Purple
+			    "#FF6800", // Vivid Orange
+			    "#A6BDD7", // Very Light Blue
+			    "#C10020", // Vivid Red
+			    "#CEA262", // Grayish Yellow
+			    "#817066", // Medium Gray
+
+			    // The following don't work well for people with defective color vision
+			    "#007D34", // Vivid Green
+			    "#F6768E", // Strong Purplish Pink
+			    "#00538A", // Strong Blue
+			    "#FF7A5C", // Strong Yellowish Pink
+			    "#53377A", // Strong Violet
+			    "#FF8E00", // Vivid Orange Yellow
+			    "#B32851", // Strong Purplish Red
+			    "#F4C800", // Vivid Greenish Yellow
+			    "#7F180D", // Strong Reddish Brown
+			    "#93AA00", // Vivid Yellowish Green
+			    "#593315", // Deep Yellowish Brown
+			    "#F13A13", // Vivid Reddish Orange
+			    "#232C16", // Dark Olive Green
+			    ];
+
+			if (d < kelly_colors_hex.length)
+				return kelly_colors_hex[d];
+			return 0; // Black
 		}
 	}
 })();
