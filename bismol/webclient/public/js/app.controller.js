@@ -96,8 +96,7 @@
 			//(i.e., once each row has finished updating, then update the chart)
 		    if(counter % dataset.length == 0 && isCreated) {
 		    	counter = 0;
-		    	var updates = dataset.slice();
-		    	updateChart(updates);
+		    	updateChart(dataset);
 		    }
 		});
 
@@ -115,11 +114,13 @@
 			//define x and y axes
 			xAxis = d3.svg.axis()
 			    .scale(xScale)
-				.orient('bottom');
+				.orient('bottom')
+				.ticks(0);
 
 			yAxis = d3.svg.axis()
 				.scale(yScale)
-				.orient('left');
+				.orient('left')
+				.ticks(0);
 
 			//create svg element
 			svg = d3.select("div")
@@ -175,28 +176,33 @@
 			main.selectAll("circle")
 			    .data(updates)
 			    .transition()
-			    .duration(1000)
+			    .duration(6000)
+			    .ease("linear")
 			    .attr("cx", function (d) { return xScale(d.x); })
 			    .attr("cy", function (d) { return yScale(d.y); });
 
 			//update the x and y axis values
 			xAxis = d3.svg.axis()
 			    .scale(xScale)
-				.orient('bottom');
+				.orient('bottom')
+				.ticks(0);
 
 			yAxis = d3.svg.axis()
 				.scale(yScale)
-				.orient('left');
+				.orient('left')
+				.ticks(0);
 
 			//and then animate the x and y axis changes
 			main.select(".x.axis")
 				.transition()
-				.duration(1000)
+				.duration(6000)
+				.ease("linear")
 				.call(xAxis);
 
 			main.select(".y.axis")
 				.transition()
-				.duration(1000)
+				.duration(6000)
+				.ease("linear")
 				.call(yAxis);
 		}
 
