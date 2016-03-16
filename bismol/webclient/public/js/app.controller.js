@@ -233,39 +233,39 @@
 
 		//handles zoom functionality
 		function zoomed() {
-		  main.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+		  	main.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 		}
 
 		//drag/drop functions
 		function dragstarted(d) {
-		  d3.event.sourceEvent.stopPropagation();
-		  d3.select(this).classed("dragging", true);
+		  	d3.event.sourceEvent.stopPropagation();
+		  	d3.select(this).classed("dragging", true);
 		}
 
 		function dragged(d) {
-		  d3.select(this)
-		    .attr("cx", d.x = d3.event.x)
-		    .attr("cy", d.y = d3.event.y);
-		  d.x = xScale.invert(d3.event.x);
-		  d.y = yScale.invert(d3.event.y);
+		  	d3.select(this)
+		    	.attr("cx", d.x = d3.event.x)
+		    	.attr("cy", d.y = d3.event.y);
+		  	d.x = xScale.invert(d3.event.x);
+		  	d.y = yScale.invert(d3.event.y);
 		}
 
 		function dragended(d) {
-		  d3.select(this).classed("dragging", false);
+		  	d3.select(this).classed("dragging", false);
 		}
 
 		//mouseover functions for tooltip
 		function mouseover(d) {
-		  tooltip.style("visibility", "visible");
+		  	tooltip.style("visibility", "visible");
 		}
 
 		function mousemove(d) {
-		  tooltip.text(d.text);
-		  tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");
+		  	tooltip.text(d.text);
+		  	tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");
 		}
 
 		function mouseout(d) {
-		  tooltip.style("visibility", "hidden");
+		  	tooltip.style("visibility", "hidden");
 		}
 
 		function toColor(d) {
