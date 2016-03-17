@@ -143,3 +143,7 @@ jspm_packages
 
 ### Rethinkdb ###
 rethinkdb_data
+
+
+### Environment Files ###
+.env
