@@ -3,7 +3,7 @@
 
 ## Build container
 
-    docker build --rm=true -t oudalab/gettweets ingestor/Dockerfile
+    docker build --rm=true -t oudalab/gettweets -f ingestor/Dockerfile .
 
 ## Run Ingestor container
 

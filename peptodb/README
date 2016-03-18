@@ -1,7 +1,7 @@
 
 ## Building the docker file
 
-    docker build --rm=true -t oudalab/peptodb:9.5 peptodb/Dockerfile
+    docker build --rm=true -t oudalab/peptodb:9.5 -f peptodb/Dockerfile .
 
 ## Running the docker instance
 
