@@ -1,0 +1,14 @@
+
+## Building the docker file
+
+    docker build --rm=true -t oudalab/peptodb:9.5 peptodb/Dockerfile
+
+## Running the docker instance
+
+    docker run -i -t -p 5432:5432 \
+      --env-file peptodb/peptodb.env \
+      -v {path}/peptodb/peptodb_data/etc/postgresql:/etc/postgresql \
+      -v {path}/peptodb/peptodb_data/var/log/postgresql:/var/log/postgresql \
+      -v {path}/peptodb/peptodb_data/var/lib/postgresql:/var/lib/postgresql \
+      oudalab/peptodb:9.5
+

@@ -1,0 +1,13 @@
+
+# Run this from the bismol folder abive ingestor and peptodb
+
+## Build container
+
+    docker build --rm=true -t oudalab/gettweets ingestor/Dockerfile
+
+## Run Ingestor container
+
+    docker run -i -t \
+      --env-file ingestor/twitter.env \
+      --env-file peptodb/peptodb.env \
+      oudalab/gettweets

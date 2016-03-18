@@ -144,6 +144,8 @@ jspm_packages
 ### Rethinkdb ###
 rethinkdb_data
 
+### peptodb ###
+peptodb_data
 
 ### Environment Files ###
 .env
