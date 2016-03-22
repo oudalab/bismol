@@ -15,10 +15,10 @@ from message import Message
 #Required for reading unicode csv
 def unicode_csv_reader(unicode_csv_data, dialect=csv.excel, **kwargs):
     # csv.py doesn't do Unicode; encode temporarily as UTF-8:
-    csv_reader = csv.reader(utf_8_encoder(unicode_csv_data), dialect=dialect, **kwargs)
+    csv_reader = csv.reader(unicode_csv_data, dialect=dialect, **kwargs)
     for row in csv_reader:
         # decode UTF-8 back to Unicode, cell by cell:
-        yield [unicode(cell, 'utf-8') for cell in row]
+        yield [cell for cell in row]
 
 def utf_8_encoder(unicode_csv_data):
     for line in unicode_csv_data:
@@ -47,24 +47,24 @@ def streammanager(mapping, dataFile):
 
 	#isTSV = mappingObject["isTSV"]
 
-	print dataPath[-3:]
+	print(dataPath[-3:])
 
 	#Open up our data file and read it
 	with io.open(dataPath, encoding="utf-8") as dataFile:
 
 		if dataPath[-3:] == "csv" or dataPath[-3:] == "tsv":
 
-			dataReader = unicode_csv_reader(dataFile, delimiter=mappingObject["delimiter"].encode("ascii"))
+			dataReader = unicode_csv_reader(dataFile, delimiter=mappingObject["delimiter"])
 		
 			#If the object has a header
 			if hasHeader:
 				#Get the header row
-				headerRow = dataReader.next()
+				headerRow = next(dataReader)
 
 				#Create and populate our dictionary mapping header values to index
 				headerToIndex = {}
 				for mapping in mappingObject["mapping"]:
-					for key, value in mapping.iteritems():
+					for key, value in mapping.items():
 						headerToIndex[key] = headerRow.index(key)
 
 			#Loop over each row of the data
@@ -78,7 +78,7 @@ def streammanager(mapping, dataFile):
 
 				#Loop over each mapping attribute, getting both the key and value
 				for mapping in mappingObject["mapping"]:
-					for key, value in mapping.iteritems():
+					for key, value in mapping.items():
 
 						if hasHeader:
 							#Set the appropriate field on the message object to our normalized value from the csv row
@@ -110,7 +110,7 @@ def streammanager(mapping, dataFile):
 	
 					#Loop over the mappings in mapping
 					for mapping in mappingObject["mapping"]:
-						for key, value in mapping.iteritems():
+						for key, value in mapping.items():
 
 							#For each mapping set the value to what we want
 							setattr(message, value, normalize(item[key], value))

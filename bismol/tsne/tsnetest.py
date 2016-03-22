@@ -1,6 +1,6 @@
 '''
-Usage: python tsnetest.py file_type data_file.tsv
-Example Usage: python tsnetest.py neel NEEL2016-training.tsv
+Usage: python3 tsnetest.py file_type data_file.tsv
+Example Usage: python3 tsnetest.py neel NEEL2016-training.tsv
 Runs a tsne simulation on given .tsv file
 '''
 
@@ -22,9 +22,9 @@ try:
 	filetype = sys.argv[1]
 	filename = sys.argv[2]
 except:
-	print "Script run with invalid arguments"
-	print "Usage: python tsnetest.py file_type data_file.tsv"
-	print "Example Usage: python tsnetest.py neel NEEL2016-training.tsv"
+	print("Script run with invalid arguments")
+	print("Usage: python3 tsnetest.py file_type data_file.tsv")
+	print("Example Usage: python3 tsnetest.py neel NEEL2016-training.tsv")
 	sys.exit(2)
 
 text = []
@@ -38,7 +38,7 @@ for message in streammanager(filetype, filename):
 #fit and transform the text into vector form using TF-IDF
 vectors = TfidfVectorizer().fit_transform(text)
 
-print repr(vectors)
+print(repr(vectors))
 
 #reduce dimensionality to 50 before running tsne
 X_reduced = TruncatedSVD(n_components=50, random_state=0).fit_transform(vectors)
@@ -46,4 +46,4 @@ X_reduced = TruncatedSVD(n_components=50, random_state=0).fit_transform(vectors)
 X_embedded = mytsne.TSNE(n_components=2, perplexity=40, verbose=2, urls=urls, text=text).fit_transform(X_reduced)
 
 trust = mytsne.trustworthiness(vectors, X_embedded)
-print "Trustworthiness: {}".format(trust)
+print("Trustworthiness: {}".format(trust))

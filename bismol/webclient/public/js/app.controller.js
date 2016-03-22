@@ -298,8 +298,8 @@
 			    "#232C16", // Dark Olive Green
 			    ];
 
-			if (d < kelly_colors_hex.length)
-				return kelly_colors_hex[d];
+			if (parseInt(d) < kelly_colors_hex.length)
+				return kelly_colors_hex[parseInt(d)];
 			return 0; // Black
 		}
 	}

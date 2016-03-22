@@ -24,7 +24,6 @@ from sklearn.metrics.pairwise import pairwise_distances
 from sklearn.manifold import _utils
 from sklearn.manifold import _barnes_hut_tsne
 from sklearn.utils.fixes import astype
-#import sqlite3
 import rethinkdb as r
 
 MACHINE_EPSILON = np.finfo(np.double).eps
@@ -354,26 +353,26 @@ def _gradient_descent(objective, p0, it, n_iter, objective_error=None,
 
             if verbose >= 2:
                 m = "[t-SNE] Iteration %d: error = %.7f, gradient norm = %.7f"
-                print(m % (i + 1, error, grad_norm))
+                print((m % (i + 1, error, grad_norm)))
 
             if error < best_error:
                 best_error = error
                 best_iter = i
             elif i - best_iter > n_iter_without_progress:
                 if verbose >= 2:
-                    print("[t-SNE] Iteration %d: did not make any progress "
+                    print(("[t-SNE] Iteration %d: did not make any progress "
                           "during the last %d episodes. Finished."
-                          % (i + 1, n_iter_without_progress))
+                          % (i + 1, n_iter_without_progress)))
                 break
             if grad_norm <= min_grad_norm:
                 if verbose >= 2:
-                    print("[t-SNE] Iteration %d: gradient norm %f. Finished."
-                          % (i + 1, grad_norm))
+                    print(("[t-SNE] Iteration %d: gradient norm %f. Finished."
+                          % (i + 1, grad_norm)))
                 break
             if error_diff <= min_error_diff:
                 if verbose >= 2:
                     m = "[t-SNE] Iteration %d: error difference %f. Finished."
-                    print(m % (i + 1, error_diff))
+                    print((m % (i + 1, error_diff)))
                 break
 
         if (i + 1) % 5 == 0:
@@ -385,7 +384,7 @@ def _gradient_descent(objective, p0, it, n_iter, objective_error=None,
 
             #combine url, xy coords, and text into one object and add to data array
             for idx in range(len(urls)):
-                urls[idx] = urls[idx].replace(u'\ufeff', '')
+                urls[idx] = urls[idx].replace('\ufeff', '')
                 tempUrl = int(urls[idx])
 
                 if(len(colors) > 0):
@@ -690,7 +689,7 @@ class TSNE(BaseEstimator):
         neighbors_nn = None
         if self.method == 'barnes_hut':
             if self.verbose:
-                print("[t-SNE] Computing %i nearest neighbors..." % k)
+                print(("[t-SNE] Computing %i nearest neighbors..." % k))
             if self.metric == 'precomputed':
                 # Use the precomputed distances to find
                 # the k nearest neighbors and their distances
@@ -790,8 +789,8 @@ class TSNE(BaseEstimator):
         params, kl_divergence, it = _gradient_descent(obj_func, params,
                                                       **opt_args)
         if self.verbose:
-            print("[t-SNE] KL divergence after %d iterations with early "
-                  "exaggeration: %f" % (it + 1, kl_divergence))
+            print(("[t-SNE] KL divergence after %d iterations with early "
+                  "exaggeration: %f" % (it + 1, kl_divergence)))
         # Save the final number of iterations
         self.n_iter_final = it
 
@@ -802,8 +801,8 @@ class TSNE(BaseEstimator):
         params, error, it = _gradient_descent(obj_func, params, **opt_args)
 
         if self.verbose:
-            print("[t-SNE] Error after %d iterations: %f"
-                  % (it + 1, kl_divergence))
+            print(("[t-SNE] Error after %d iterations: %f"
+                  % (it + 1, kl_divergence)))
 
         X_embedded = params.reshape(n_samples, self.n_components)
         self.kl_divergence_ = kl_divergence

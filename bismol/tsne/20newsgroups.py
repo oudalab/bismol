@@ -1,5 +1,5 @@
 '''
-Usage: python 20newsgroups.py
+Usage: python3 20newsgroups.py
 Runs a tsne simulation on the 20newsgroups training set (11,314 elements)
 '''
 
@@ -20,16 +20,20 @@ twenty_train = fetch_20newsgroups(subset='train', shuffle=True, random_state = 4
 vectors = TfidfVectorizer().fit_transform(twenty_train.data)
 
 urls = []
+colors = []
 
 for i in range(len(twenty_train.data)):
 	urls.append(str(i))
 
-print repr(vectors)
+for i in range(len(twenty_train.target)):
+	colors.append(str(twenty_train.target[i]))
+
+print(repr(vectors))
 
 #reduce dimensionality to 50 before running tsne
 X_reduced = TruncatedSVD(n_components=50, random_state=0).fit_transform(vectors)
 #run tsne, convert to two dimensions
-X_embedded = mytsne.TSNE(n_components=2, perplexity=40, verbose=2, urls=urls, colors=twenty_train.target, text=twenty_train.data).fit_transform(X_reduced)
+X_embedded = mytsne.TSNE(n_components=2, perplexity=40, verbose=2, urls=urls, colors=colors, text=twenty_train.data).fit_transform(X_reduced)
 
 trust = mytsne.trustworthiness(vectors, X_embedded)
-print "Trustworthiness: {}".format(trust)
+print("Trustworthiness: {}".format(trust))
