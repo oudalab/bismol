@@ -27,93 +27,93 @@ def utf_8_encoder(unicode_csv_data):
 """This is the stream manager generator. It takes a mapping json file (without the file extension) located in the interfaces folder and a data file with the extension that's located in the data directory"""
 def streammanager(mapping, dataFile):
 
-	#Get the path of the interface
-	filePath = os.path.join(os.getcwd(), "interfaces")
+    #Get the path of the interface
+    filePath = os.path.join(os.getcwd(), "interfaces")
 
-	#get the paths for the config file and the data file
-	interfacePath = os.path.join(filePath, mapping + ".json")
-	
-	#pdb.set_trace()
+    #get the paths for the config file and the data file
+    interfacePath = os.path.join(filePath, mapping + ".json")
 
-	#print os.path.dirname(os.path.realpath(__file__))
+    #pdb.set_trace()
 
-	dataPath =  os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), "data", dataFile)
-	
-	#Load up our Json file into an object
-	mappingObject =  json.load(io.open(interfacePath, encoding="utf-8"), encoding="utf-8")
+    #print os.path.dirname(os.path.realpath(__file__))
+    #print dataFile
+    dataPath =  os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), "data", dataFile)
 
-	#Check if the mapping has a header
-	hasHeader = mappingObject["hasHeader"]
+    #Load up our Json file into an object
+    mappingObject =  json.load(io.open(interfacePath, encoding="utf-8"), encoding="utf-8")
 
-	#isTSV = mappingObject["isTSV"]
+    #Check if the mapping has a header
+    hasHeader = mappingObject["hasHeader"]
 
-	print dataPath[-3:]
+    #isTSV = mappingObject["isTSV"]
 
-	#Open up our data file and read it
-	with io.open(dataPath, encoding="utf-8") as dataFile:
+    print dataPath[-3:]
 
-		if dataPath[-3:] == "csv" or dataPath[-3:] == "tsv":
+    #Open up our data file and read it
+    with io.open(dataPath, encoding="utf-8") as dataFile:
 
-			dataReader = unicode_csv_reader(dataFile, delimiter=mappingObject["delimiter"].encode("ascii"))
-		
-			#If the object has a header
-			if hasHeader:
-				#Get the header row
-				headerRow = dataReader.next()
+        if dataPath[-3:] == "csv" or dataPath[-3:] == "tsv":
 
-				#Create and populate our dictionary mapping header values to index
-				headerToIndex = {}
-				for mapping in mappingObject["mapping"]:
-					for key, value in mapping.iteritems():
-						headerToIndex[key] = headerRow.index(key)
+            dataReader = unicode_csv_reader(dataFile, delimiter=mappingObject["delimiter"].encode("ascii"))
 
-			#Loop over each row of the data
-			for row in dataReader:
+            #If the object has a header
+            if hasHeader:
+                #Get the header row
+                headerRow = dataReader.next()
 
-				#Create our message object
-				message = Message()
-	
-				#Set the source of the message -- will be the same for every interface
-				message.source = mappingObject["name"]
+                #Create and populate our dictionary mapping header values to index
+                headerToIndex = {}
+                for mapping in mappingObject["mapping"]:
+                    for key, value in mapping.iteritems():
+                        headerToIndex[key] = headerRow.index(key)
 
-				#Loop over each mapping attribute, getting both the key and value
-				for mapping in mappingObject["mapping"]:
-					for key, value in mapping.iteritems():
+            #Loop over each row of the data
+            for row in dataReader:
 
-						if hasHeader:
-							#Set the appropriate field on the message object to our normalized value from the csv row
-							setattr(message, value, normalize(row[headerToIndex[key]], value))
+                #Create our message object
+                message = Message()
 
-						else:
-							setattr(message, value, normalize(row[int(key)], value))
+                #Set the source of the message -- will be the same for every interface
+                message.source = mappingObject["name"]
 
-				#So now our message is complete so yield it as per a generator
-				yield message
+                #Loop over each mapping attribute, getting both the key and value
+                for mapping in mappingObject["mapping"]:
+                    for key, value in mapping.iteritems():
 
-		#Otherwise our file is a JSON file
-		elif dataPath[-4:] == "json":
+                        if hasHeader:
+                            #Set the appropriate field on the message object to our normalized value from the csv row
+                            setattr(message, value, normalize(row[headerToIndex[key]], value))
 
-			#Make our object
-			dataObject = json.load(dataFile)
+                        else:
+                            setattr(message, value, normalize(row[int(key)], value))
 
-			#Make sure it has stuff in it
-			if len(dataObject) > 0:
+                #So now our message is complete so yield it as per a generator
+                yield message
 
-				#Loop over the stuff
-				for item in dataObject:
+        #Otherwise our file is a JSON file
+        elif dataPath[-4:] == "json":
 
-					#Create a message
-					message = Message()
-					
-					#Set the source of the message
-					message.source = mappingObject["name"]
-	
-					#Loop over the mappings in mapping
-					for mapping in mappingObject["mapping"]:
-						for key, value in mapping.iteritems():
+            #Make our object
+            dataObject = json.load(dataFile)
 
-							#For each mapping set the value to what we want
-							setattr(message, value, normalize(item[key], value))
+            #Make sure it has stuff in it
+            if len(dataObject) > 0:
 
-					#Yield our message
-					yield message
+                #Loop over the stuff
+                for item in dataObject:
+
+                    #Create a message
+                    message = Message()
+
+                    #Set the source of the message
+                    message.source = mappingObject["name"]
+
+                    #Loop over the mappings in mapping
+                    for mapping in mappingObject["mapping"]:
+                        for key, value in mapping.iteritems():
+
+                            #For each mapping set the value to what we want
+                            setattr(message, value, normalize(item[key], value))
+
+                    #Yield our message
+                    yield message
