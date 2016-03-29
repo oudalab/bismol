@@ -21,3 +21,6 @@ class Message():
 
 	def send(self):
 		'''Fill in send method. Sends a message to queue (or whatever we are using)'''
+
+	def tojson(self):
+		return self.__dict__()

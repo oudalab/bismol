@@ -1,5 +1,3 @@
-import pika
-import sys
 sys.path.append('..')
 '''import bismol
 from bismol import streaminterface
@@ -41,3 +39,4 @@ class twitter_csv_worker(Worker):
         # http://www.rabbitmq.com/tutorials/tutorial-one-python.html
         connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
         channel = connection.channel()
+        channel.queue_declare(queue='message')
