@@ -33,14 +33,22 @@ app.use(function(req, res, next) {
   next(err);
 });
 
-io.on('connection', function(){
+io.on('connection', function(socket){
   r.table('messages').run(connection, function(err, cursor) {
         if (err) throw err;
         cursor.toArray(function(err, result) {
           if (err) throw err;
           io.emit('connected', result);
         });
+  });
+
+  socket.on('point changed', function(data) {
+    //console.log(data);
+    data['modified_by'] = 'client';
+    r.table('messages').insert(data, { conflict: 'update' }).run(connection, function() {
+      console.log('updated user point');
     });
+  });
 
   var sampleData = [
 		{'lat': 33.397, 'long': -100.644, 'title': 'Test status 1', 'dateTime': 'Today'},
@@ -81,7 +89,11 @@ r.connect( {host: 'localhost', port: 28015, db: 'messagedb'}, function(err, conn
         cursor.each(function(err, row) {
             if (err) throw err;
             //console.log(JSON.stringify(row, null, 2));
-            io.emit('dbchanged', row);
+            if(row['new_val'] !== null) {
+              if (row['new_val']['modified_by'] === 'server') {
+                io.emit('dbchanged', row);
+              }
+            }
         });
     });
 });

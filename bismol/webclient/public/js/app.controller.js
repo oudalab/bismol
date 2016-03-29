@@ -251,6 +251,7 @@
 		}
 
 		function dragended(d) {
+			socket.emit('point changed', d);
 		  	d3.select(this).classed("dragging", false);
 		}
 

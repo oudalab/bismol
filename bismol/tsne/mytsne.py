@@ -25,8 +25,10 @@ from sklearn.manifold import _utils
 from sklearn.manifold import _barnes_hut_tsne
 from sklearn.utils.fixes import astype
 import rethinkdb as r
+from threading import Thread
 
 MACHINE_EPSILON = np.finfo(np.double).eps
+changes = {}
 
 
 def _joint_probabilities(distances, desired_perplexity, verbose):
@@ -257,6 +259,19 @@ def _kl_divergence_bh(params, P, neighbors, degrees_of_freedom, n_samples,
 
     return error, grad
 
+def _get_changes(table_name):
+    # connect to database
+    conn = r.connect(host="localhost", port=28015, db="messagedb")
+
+    # monitor changes
+    for change in r.table(table_name).changes().run(conn):
+        # if the change is an update and the change is coming from the client
+        if change["old_val"] != None and change["new_val"]["modified_by"] == "client":
+            changes[change["new_val"]["id"]] = change
+
+    # close database connection
+    conn.close()
+
 
 def _gradient_descent(objective, p0, it, n_iter, objective_error=None,
                       n_iter_check=1, n_iter_without_progress=50,
@@ -345,6 +360,14 @@ def _gradient_descent(objective, p0, it, n_iter, objective_error=None,
         update = momentum * update - learning_rate * grad
         p += update
 
+        # check client changes       
+        if (len(changes) > 0):
+            for key in changes.keys():
+                index = urls.index(key)
+                p[index] = changes[key]['x']
+                p[index] + 1 = changes[key]['y']
+                del changes[key]
+
         if (i + 1) % n_iter_check == 0:
             if new_error is None:
                 new_error = objective_error(p, *args)
@@ -394,7 +417,8 @@ def _gradient_descent(objective, p0, it, n_iter, objective_error=None,
                             "x": embedded_array[idx][0],
                             "y": embedded_array[idx][1],
                             "text": text[idx],
-                            "color": colors[idx]
+                            "color": colors[idx],
+                            "modified_by": "server"
                         })
                 else:
                     data.append(
@@ -402,7 +426,8 @@ def _gradient_descent(objective, p0, it, n_iter, objective_error=None,
                             "id": tempUrl,
                             "x": embedded_array[idx][0],
                             "y": embedded_array[idx][1],
-                            "text": text[idx]
+                            "text": text[idx],
+                            "modified_by": "server"
                         })
 
             #insert data into the database, updating if it already exists
@@ -740,6 +765,11 @@ class TSNE(BaseEstimator):
         # * final optimization with momentum 0.8
         # The embedding is initialized with iid samples from Gaussians with
         # standard deviation 1e-4.
+
+        # begin monitoring the database for changes
+        thread = Thread(target=_get_changes, args=("messages",))
+        thread.setDaemon(True)
+        thread.start()
 
         if X_embedded is None:
             # Initialize embedding randomly
