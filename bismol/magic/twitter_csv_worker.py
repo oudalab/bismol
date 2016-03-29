@@ -1,3 +1,4 @@
+import pika
 import sys
 sys.path.append('..')
 '''import bismol
@@ -13,13 +14,13 @@ from worker import Worker
 class twitter_csv_worker(Worker):
     """ Implementation of the worker object for using SKlearn with message
     objects"""
-    def __init__(self, job, input_file,interface ='TT', tagset=None, output_file=None, train_file=None):
+    def __init__(self, job, input_file,interface ='TT', tagset=None, output_type=None, train_file=None,*args, **kwargs):
         # initialize variables
         self.interface = interface
         self.tagset = tagset
         self.job = job
         self.input_subscription = input_file
-        self.output_subscription = output_file
+        self.output_subscription = output_type
         self.training_subscription = train_file
         self.status = None
 
@@ -29,6 +30,14 @@ class twitter_csv_worker(Worker):
             iterator = streammanager(self.interface,self.input_subscription)
         # classified will be able to be used to push output to output_subscription
         classified = self.job.run_classifier(iterator, stop_condition = sc)
+        self.output(classified)
 
     def train(self, **kwargs):
         self.job.training(self.tagset, streammanager(self.interface,self.training_subscription), **kwargs)
+
+    def output(classified, *args, **kwargs):
+        return
+        # output to pika queue should happen here
+        # http://www.rabbitmq.com/tutorials/tutorial-one-python.html
+        connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+        channel = connection.channel()

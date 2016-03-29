@@ -50,12 +50,16 @@ class twitter_csv_job(Job):
 
     def run_classifier(self, iterator, stop_condition, **kwargs):
         # for now, this only will test the SKLearn-ed classifier
-        msg_list = []
+        msg_tag_list = []
+        messages = []
         for message in iterator:
-            msg_list.append(message.tags)
+            messages.append(message)
+            msg_tag_list.append(message.tags)
 
-        scores = cross_validation.cross_val_score(self.clf, self.tfidf, msg_list, cv=5)
+        scores = cross_validation.cross_val_score(self.clf, self.tfidf, msg_tag_list, cv=5)
         print scores
+
+        return messages
 
         '''the classification should be something like the following:
         classified = []
@@ -67,6 +71,3 @@ class twitter_csv_job(Job):
                 classified.append(next_msg, clf.predict(t))
             else:
                 #wait here'''
-
-
-        return scores
