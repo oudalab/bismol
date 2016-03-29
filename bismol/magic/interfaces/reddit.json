@@ -1,0 +1,10 @@
+{
+  "name": "reddit",
+  "hasHeader": true,
+  "isTSV": false,
+  "mapping": [
+    {"created_utc": "timeStamp"},
+    {"permalink": "id"},
+    {"title": "text"}
+  ]
+}

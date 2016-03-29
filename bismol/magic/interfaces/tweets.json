@@ -1,0 +1,10 @@
+{
+  "name": "twitter",
+  "hasHeader": true,
+  "delimiter": ",",
+  "mapping": [
+    {"timestamp": "timeStamp"},
+    {"tweet_id": "id"},
+    {"text": "text"}
+  ]
+}

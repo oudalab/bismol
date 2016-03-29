@@ -149,3 +149,4 @@ peptodb_data
 
 ### Environment Files ###
 *.env
+peptodb.env

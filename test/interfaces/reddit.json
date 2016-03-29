@@ -4,7 +4,7 @@
   "isTSV": false,
   "mapping": [
     {"created_utc": "timeStamp"},
-    {"permalink": "URL"},
-    {"title": "text"}	
+    {"permalink": "id"},
+    {"title": "text"}
   ]
 }
