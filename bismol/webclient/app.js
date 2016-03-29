@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var r = require('rethinkdb');
 var routes = require('./routes/index');
 var sockio = require('socket.io');
+var ampq = require('amqplib/callback_api');
 var app = express();
 
 // view engine setup
@@ -50,7 +51,7 @@ io.on('connection', function(socket){
     });
   });
 
-  var sampleData = [
+  /*var sampleData = [
 		{'lat': 33.397, 'long': -100.644, 'title': 'Test status 1', 'dateTime': 'Today'},
 		{'lat': 34.397, 'long': -100.644, 'title': 'Test status 2', 'dateTime': 'Today'},
 		{'lat': 35.397, 'long': -100.644, 'title': 'Test status 3', 'dateTime': 'Today'},
@@ -75,7 +76,20 @@ io.on('connection', function(socket){
     } else {
       clearInterval();
     }
-  }, 1000);
+  }, 1000);*/
+});
+
+ampq.connect('amqp://localhost', function(err, conn) {
+	conn.createChannel(function(err, ch) {
+		var q = 'message';
+		
+		ch.assertQueue(q, {durable: false});
+
+		console.log("Waiting for messages in %s.", q);
+		ch.consume(q, function(msg) {
+			io.emit('newPoints',  msg.content.toString());
+		}, {noAck: true});
+	});
 });
 
 // Connect to rethinkdb
