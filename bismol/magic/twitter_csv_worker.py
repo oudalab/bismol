@@ -1,3 +1,5 @@
+import sys
+
 sys.path.append('..')
 '''import bismol
 from bismol import streaminterface
@@ -42,8 +44,9 @@ class twitter_csv_worker(Worker):
         #connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
         #channel = connection.channel()
         #channel.queue_declare(queue='message')
-        # TODO 
+        # TODO
+        print(classified) 
         url = 'localhost:8099/newmessage'
-        request.urlopen(url, map(lambda x: x.tojson(), classified), method='POST')
+        request.urlopen(url, str(map(lambda x: x.tojson(), classified)), method='POST')
 
 

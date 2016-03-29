@@ -22,6 +22,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.post('/newmessage', function(req, res) {
+	console.log(req.body);
+	//io.emit('newPoints',  req.body);
+});
+
 app.use('/', routes);
 
 var io = sockio.listen(app.listen(8099), {log: false});
@@ -79,7 +84,7 @@ io.on('connection', function(socket){
   }, 1000);*/
 });
 
-ampq.connect('amqp://localhost', function(err, conn) {
+/*ampq.connect('amqp://localhost', function(err, conn) {
 	conn.createChannel(function(err, ch) {
 		var q = 'message';
 		
@@ -90,7 +95,7 @@ ampq.connect('amqp://localhost', function(err, conn) {
 			io.emit('newPoints',  msg.content.toString());
 		}, {noAck: true});
 	});
-});
+});*/
 
 // Connect to rethinkdb
 var connection = null;
