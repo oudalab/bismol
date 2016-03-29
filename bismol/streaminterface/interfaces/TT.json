@@ -1,0 +1,14 @@
+{
+  "name":"TT",
+  "hasHeader":false,
+  "delimiter":"`",
+  "mapping":
+  [
+    {"0":"id"},
+    {"1":"source"},
+    {"2":"text"},
+    {"3":"geocode"},
+    {"4":"timestamp"},
+    {"5":"tags"}
+  ]
+}

@@ -3,7 +3,7 @@
   "hasHeader": false,
   "delimiter": "\t",
   "mapping": [
-    {"0": "URL"},
+    {"0": "id"},
     {"1": "text"}
   ]
 }

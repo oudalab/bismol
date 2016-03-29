@@ -4,7 +4,7 @@
   "delimiter": ",",
   "mapping": [
     {"timestamp": "timeStamp"},
-    {"tweet_id": "URL"},
+    {"tweet_id": "id"},
     {"text": "text"}
   ]
 }

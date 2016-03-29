@@ -2,15 +2,16 @@ import datetime
 
 class Message():
 	'''Encapsulates the message data used in the program internally'''
-	def __init__(self, url = None, source = None, text = None, geocode = None, timestamp = datetime.datetime.now()):
+	def __init__(self, id = None, source = None, text = None, geocode = None, timestamp = datetime.datetime.now(), tags = None):
 		'''Constructor'''
-		self.url = url
+		self.id = id
 		self.source = source
 		self.text = text
 		self.geocode = geocode
 		self.timestamp = timestamp
 		self.decision = None
 		self.confidence = None
+		self.tags = tags
 
 	def __str__(self):
 		'''Override str method'''

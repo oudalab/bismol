@@ -21,29 +21,52 @@ RUN apt-get update && apt-get install -y python-software-properties software-pro
 # Install python
 RUN apt-get install -y python-pip python3 python-tweepy python-matplotlib-data python-numpy python-pandas python-psycopg2
 
-USER postgres
+RUN locale-gen "en_US.UTF-8" && dpkg-reconfigure locales
+
+#RUN pg_dropcluster --stop 9.5 main && pg_createcluster --locale en_US.UTF-8 --start 9.5 main
+
+RUN apt-get install -y vim htop
+
 
 # Create the databse 
-RUN    /etc/init.d/postgresql start &&\
-    psql --command "CREATE USER docker WITH SUPERUSER PASSWORD 'docker';" &&\
-    createdb -O docker --encoding=UTF8 docker
+#RUN    /etc/init.d/postgresql start &&\
+#    psql --command "CREATE USER docker WITH SUPERUSER PASSWORD 'docker';" &&\
+#    createdb -O docker --encoding=UTF8 docker
 
-USER root
+RUN echo "local   all             all                                     trust" >> /etc/postgresql/9.5/main/pg_hba.conf
+RUN echo "host    all             all             127.0.0.1/32            trust" >> /etc/postgresql/9.5/main/pg_hba.conf
 RUN echo "host all  all    0.0.0.0/0  md5" >> /etc/postgresql/9.5/main/pg_hba.conf
 RUN echo "listen_addresses='*'" >> /etc/postgresql/9.5/main/postgresql.conf
 EXPOSE 5432
 
-# https://docs.docker.com/engine/userguide/containers/dockervolumes/
-RUN mkdir -p /var/run/postgresql && chown -R postgres /var/run/postgresql
-VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
+# Create the databse 
+#RUN    /etc/init.d/postgresql start &&\
+#    su postgres -c "createdb -O postgres --encoding=UTF-8 --template=template0 --locale=en_US.UTF-8 peptodb"
 
-COPY pepto.sh /pepto.sh
-COPY peptodb.sql /peptodb.sql
-RUN chown -R postgres /pepto.sh /peptodb.sql
+
+#pg_upgradecluster --locale=en_US.utf8 --start 9.5 main
+
+# https://docs.docker.com/engine/userguide/containers/dockervolumes/
+#RUN mkdir -p /var/run/postgresql && chown -R postgres /var/run/postgresql && chown -R postgres /etc/postgresql && chown -R postgres /var/lib/postgresql
+#VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
+
+COPY peptodb/pepto.sh /pepto.sh
+COPY peptodb/peptodb.sql /peptodb.sql
+RUN chown postgres /pepto.sh /peptodb.sql && chmod 777 /pepto.sh /peptodb.sql
+
+#RUN pg_createcluster --locale=en_US.UTF-8 9.5 main --start
 
 # Set the default command to run when starting the container
-USER postgres
-RUN pepto.sh
-CMD ["/usr/lib/postgresql/9.5/bin/postgres", "-D", "/var/lib/postgresql/9.5/main", "-c", "config_file=/etc/postgresql/9.5/main/postgresql.conf"]
+USER root
+VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
+#RUN bash /pepto.sh
+#CMD ["bash", "/pepto.sh", ";", "bash"]
+#CMD ["bash", "/pepto.sh", "&"]
+#ENTRYPOINT ["bash", "pepto.sh"]
+#CMD /pepto.sh 
+#ENTRYPOINT bash
+
+#CMD ["bash", "/pepto.sh", ";", "bash"]
+# CMD ["/usr/lib/postgresql/9.5/bin/postgres", "-D", "/var/lib/postgresql/9.5/main", "-c", "config_file=/etc/postgresql/9.5/main/postgresql.conf"]
 
 
