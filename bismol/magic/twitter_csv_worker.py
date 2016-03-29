@@ -7,6 +7,9 @@ import streaminterface
 from streaminterface import streammanager
 from streaminterface.streammanager import streammanager
 
+import urllib
+from urllib import request
+
 from worker import Worker
 
 class twitter_csv_worker(Worker):
@@ -34,9 +37,13 @@ class twitter_csv_worker(Worker):
         self.job.training(self.tagset, streammanager(self.interface,self.training_subscription), **kwargs)
 
     def output(classified, *args, **kwargs):
-        return
         # output to pika queue should happen here
         # http://www.rabbitmq.com/tutorials/tutorial-one-python.html
-        connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
-        channel = connection.channel()
-        channel.queue_declare(queue='message')
+        #connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+        #channel = connection.channel()
+        #channel.queue_declare(queue='message')
+        # TODO 
+        url = 'localhost:8099/newmessage'
+        request.urlopen(url, map(lambda x: x.tojson(), classified), method='POST')
+
+
