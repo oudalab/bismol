@@ -15,7 +15,7 @@ class Message():
 
 	def __str__(self):
 		'''Override str method'''
-		seq = ('From ', self.url, ' (', self.source, ') at ', self.timestamp.strftime("%Y-%m-%d %H:%M:%S"), '.',
+		seq = ('From ', self.id, ' (', self.source, ') at ', self.timestamp.strftime("%Y-%m-%d %H:%M:%S"), '.',
 		' Location: ', self.geocode, '.\n', 'Message Body: ', self.text)
 		return ''.join(seq)
 
