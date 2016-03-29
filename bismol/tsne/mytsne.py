@@ -264,13 +264,10 @@ def _get_changes(table_name):
     conn = r.connect(host="localhost", port=28015, db="messagedb")
 
     # monitor changes
-    for change in r.table(table_name).changes().run(conn):
+    '''for change in r.table(table_name).changes().run(conn):
         # if the change is an update and the change is coming from the client
         if change["old_val"] != None and change["new_val"]["modified_by"] == "client":
-            changes[change["new_val"]["id"]] = change
-
-    # close database connection
-    conn.close()
+            changes[change["new_val"]["id"]] = change'''
 
 
 def _gradient_descent(objective, p0, it, n_iter, objective_error=None,
@@ -361,12 +358,12 @@ def _gradient_descent(objective, p0, it, n_iter, objective_error=None,
         p += update
 
         # check client changes       
-        if (len(changes) > 0):
+        '''if (len(changes) > 0):
             for key in changes.keys():
                 index = urls.index(key)
                 p[index] = changes[key]['x']
                 p[index] + 1 = changes[key]['y']
-                del changes[key]
+                del changes[key]'''
 
         if (i + 1) % n_iter_check == 0:
             if new_error is None:
