@@ -1,13 +1,23 @@
 
-# Run this from the bismol folder abive ingestor and peptodb
+Run this from the bismol folder abive ingestor and peptodb
+
+Set the username and passwords in ingestor/ingestor.env
+Note the PG Host is the host location of the peptodb database.
 
 ## Build container
 
-    docker build --rm=true -t oudalab/gettweets -f ingestor/Dockerfile .
+    docker build -t oudalab/gettweets -f ingestor/Dockerfile .
 
 ## Run Ingestor container
 
+Running this docker file immediatly runs the tweet getter and
+starts sending it to the database.
+
     docker run -i -t \
-      --env-file ingestor/twitter.env \
-      --env-file peptodb/peptodb.env \
+      --rm=true \
+      --name ingestor-oudalab \
+      --env-file ingestor/ingestor.env \
       oudalab/gettweets
+
+Control-C closes this tweet getter. You can have different
+ingesters by just changing the .env file. 

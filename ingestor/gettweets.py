@@ -45,9 +45,9 @@ class HealthStreamListener(tweepy.StreamListener):
 
     def on_status(self, status):
         # Insert the data into postgresql
-        cur = conn.cursor()
-        cur.execute(INSERT, (status['_id'], RUNID, status.text,
-            status.text, extras.Json(status._json)))
+        cur = self.conn.cursor()
+        cur.execute(INSERT, (status.id, RUNID, status.text, status.text, extras.Json(status._json)))
+        self.conn.commit()
         cur.close()
         print('{}'.format(dumps(status._json)), file=sys.stderr)
 

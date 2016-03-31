@@ -1,5 +1,4 @@
 
-
 -- main tweets
 CREATE  TABLE tweets (
 	tweetid bigint, -- tweet of the id
@@ -17,7 +16,6 @@ CREATE  TABLE classification (
 	class text, -- the classification of the tweet
 	conf float -- confidence of the classification
 );
-
 
 -- run information
 CREATE  TABLE runs (
