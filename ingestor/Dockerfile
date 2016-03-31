@@ -14,12 +14,16 @@ RUN echo "deb https://apt.dockerproject.org/repo ubuntu-wily main" > /etc/apt/so
 RUN apt-get install -y apt-transport-https
 RUN apt-get update && apt-get install -y python-software-properties software-properties-common postgresql-9.5 postgresql-client-9.5 postgresql-contrib-9.5 postgresql-contrib-9.5 postgresql-plpython3-9.5 postgresql-9.5-postgis-scripts postgresql-hll postgresql-client-common postgresql-server-dev-9.5 postgresql-common
 # Install python
-RUN apt-get install -y python-pip python3 python-tweepy python-matplotlib-data python-numpy python-pandas python-psycopg2
+RUN apt-get install -y python-pip python3 python-tweepy python-matplotlib-data python-numpy python-pandas python-psycopg2 python3-setuptools
+
+RUN apt-get install -y python3-pip
+
+RUN pip3 install tweepy psycopg2
 
 # Copy over a keyword file
-COPY key-words.json /key-words.json
+COPY ingestor/key-words.json /key-words.json
 # Copy python file
-COPY gettweets.py /gettweets.py
+COPY ingestor/gettweets.py /gettweets.py
 
 # Set the default command to run when starting the container
 # Start the ingestor
