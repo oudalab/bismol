@@ -28,7 +28,7 @@ import rethinkdb as r
 from threading import Thread
 
 MACHINE_EPSILON = np.finfo(np.double).eps
-changes = {}
+changes = []
 
 
 def _joint_probabilities(distances, desired_perplexity, verbose):
@@ -264,10 +264,10 @@ def _get_changes(table_name):
     conn = r.connect(host="localhost", port=28015, db="messagedb")
 
     # monitor changes
-    '''for change in r.table(table_name).changes().run(conn):
+    for change in r.table(table_name).changes().run(conn):
         # if the change is an update and the change is coming from the client
         if change["old_val"] != None and change["new_val"]["modified_by"] == "client":
-            changes[change["new_val"]["id"]] = change'''
+            changes.append(change)
 
 
 def _gradient_descent(objective, p0, it, n_iter, objective_error=None,
@@ -348,6 +348,28 @@ def _gradient_descent(objective, p0, it, n_iter, objective_error=None,
         new_error, grad = objective(p, *args, **kwargs)
         grad_norm = linalg.norm(grad)
 
+        # track which keys to remove from dictionary
+        to_remove = []
+        # check client changes       
+        if (len(changes) > 0):
+            for change in changes:
+                index = urls.index(str(change["new_val"]["id"]))
+                print(index)
+                print(changes)
+                print(p[index * 2])
+                print(p[index * 2 + 1])
+                print(change["old_val"]["x"])
+                print(change["old_val"]["y"])
+                print(change["new_val"]["x"])
+                print(change["new_val"]["y"])
+                p[index * 2] = change["new_val"]["x"]
+                p[index * 2 + 1] = change["new_val"]["y"]
+                to_remove.append(change)
+            for item in to_remove:
+                print (len(changes))
+                changes.remove(item)
+                print (len(changes))
+
         inc = update * grad >= 0.0
         dec = np.invert(inc)
         gains[inc] += 0.05
@@ -355,15 +377,7 @@ def _gradient_descent(objective, p0, it, n_iter, objective_error=None,
         np.clip(gains, min_gain, np.inf)
         grad *= gains
         update = momentum * update - learning_rate * grad
-        p += update
-
-        # check client changes       
-        '''if (len(changes) > 0):
-            for key in changes.keys():
-                index = urls.index(key)
-                p[index] = changes[key]['x']
-                p[index] + 1 = changes[key]['y']
-                del changes[key]'''
+        p += update 
 
         if (i + 1) % n_iter_check == 0:
             if new_error is None:

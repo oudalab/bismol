@@ -14,7 +14,8 @@ from tsne import mytsne
 from tsne.mytsne import trustworthiness
 
 #get 20 Newsgroups dataset
-twenty_train = fetch_20newsgroups(subset='train', shuffle=True, random_state = 42)
+categories = ['sci.electronics', 'sci.space', 'talk.politics.mideast', 'alt.atheism']
+twenty_train = fetch_20newsgroups(subset='train', shuffle=True, random_state = 42, categories = categories)
 
 #fit and transform the text into vector form using TF-IDF
 vectors = TfidfVectorizer().fit_transform(twenty_train.data)
