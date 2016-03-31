@@ -46,4 +46,4 @@ class twitter_csv_worker(Worker):
         #channel.queue_declare(queue='message')
         # TODO
         url = 'localhost:8099/newmessage'
-        request.urlopen(url, str(map(lambda x: x.tojson(), classified)), method='POST')
+        request.urlopen(url, data=str(map(lambda x: x.tojson(), classified)))
