@@ -1,14 +1,37 @@
 
 ## Building the docker file
 
-    docker build --rm=true -t oudalab/peptodb:9.5 -f peptodb/Dockerfile .
+From the bismol directory, run the following command to buld the container
+
+    docker build -t oudalab/peptodb:9.5 -f peptodb/Dockerfile .
 
 ## Running the docker instance
 
 docker run -i -t -p 5432:5432 \
+	--name thedb \
+	--rm=true \
   --env-file `pwd`/peptodb/peptodb.env \
   -v `pwd`/peptodb/peptodb_data/etc/postgresql:/etc/postgresql \
   -v `pwd`/peptodb/peptodb_data/var/log/postgresql:/var/log/postgresql \
   -v `pwd`/peptodb/peptodb_data/var/lib/postgresql:/var/lib/postgresql \
   oudalab/peptodb:9.5
 
+
+The command above will run the new docker container and let you go inside.
+You will be logged in as the root user.
+The first thing you must do is install the database and the database tables.
+You can do that by running the peptodb script.
+
+		/pepto.sh
+
+Next, continuing as root user inside of the docker machine, the password can be changed 
+by switching to the postgres users, entering the entering `psql` and using the `\password` command.
+
+		root@xxxxx:/#  su postgres
+		postgres@xxxx$ psql
+		peptodb=# \password
+		
+Now you have the database and tables install. You can now detach and leave the
+database server running in the background using the follow key command `CTRL-p CTRL-q`.
+You can reattach using `docker attach thedb`, where thedb is the name if the instance 
+specified in the run command.

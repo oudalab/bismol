@@ -19,12 +19,8 @@ checkdb () {
     echo "******DATABASE FOUND******"
   else
     echo "******CREATING DATABASE******"
-    su postgres -c "createdb -O postgres --encoding=UTF-8 --template=template0 --locale=en_US.UTF-8 peptodb"
-    #psql -d docker -f /peptodb.sql
-
-    #psql <<- EOSQL
-    #CREATE ROLE $PGUSER WITH LOGIN ENCRYPTED PASSWORD '${PGPASSWORD}' CREATEDB;
-    #EOSQL
+    # TODO change the owner of the database
+    su postgres -c "createdb -O postgres --no-password --encoding=UTF-8 --template=template0 --locale=en_US.UTF-8 peptodb"
 
     #psql <<- EOSQL
     #   CREATE DATABASE $PGDATABASE WITH OWNER $PGUSER TEMPLATE template1 ENCODING 'UTF-8';
