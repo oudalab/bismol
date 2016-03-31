@@ -38,15 +38,12 @@ class twitter_csv_worker(Worker):
     def train(self, **kwargs):
         self.job.training(self.tagset, streammanager(self.interface,self.training_subscription), **kwargs)
 
-    def output(classified, *args, **kwargs):
+    def output(self, classified, *args, **kwargs):
         # output to pika queue should happen here
         # http://www.rabbitmq.com/tutorials/tutorial-one-python.html
         #connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
         #channel = connection.channel()
         #channel.queue_declare(queue='message')
         # TODO
-        print(classified) 
         url = 'localhost:8099/newmessage'
         request.urlopen(url, str(map(lambda x: x.tojson(), classified)), method='POST')
-
-

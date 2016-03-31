@@ -58,7 +58,6 @@ class twitter_csv_job(Job):
 
         scores = cross_validation.cross_val_score(self.clf, self.tfidf, msg_tag_list, cv=5)
         print(scores)
-
         return messages
 
         '''the classification should be something like the following:
