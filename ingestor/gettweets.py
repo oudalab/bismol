@@ -46,7 +46,7 @@ class HealthStreamListener(tweepy.StreamListener):
     def on_status(self, status):
         # Insert the data into postgresql
         cur = self.conn.cursor()
-        cur.execute(INSERT, (status.id, RUNID, status.text, status.text, extras.Json(status._json)))
+        cur.execute(INSERT, (status.id, RUNID, status.text, status.text, json.dumps(status._json)))
         self.conn.commit()
         cur.close()
         print('{}'.format(dumps(status._json)), file=sys.stderr)
@@ -83,6 +83,10 @@ if __name__ == "__main__":
                         default=environ['TWITTER_ACCESS_TOKEN_SECRET'],
                         help="The twitter access token secret")
 
+    # Option to be flexibe with time outs and ssl errors
+    # https://github.com/ryanmcgrath/twython/issues/273
+    client_args = { 'verify': False }
+
     args = parser.parse_args()
 
     auth = tweepy.OAuthHandler(args.ck, args.cs)
@@ -92,6 +96,11 @@ if __name__ == "__main__":
 
     myStreamListener = HealthStreamListener(api)
     myStream = tweepy.Stream(auth = api.auth, listener=myStreamListener)
-    #myStream.filter(track=['diabetes'], async=True)
-    myStream.filter(track=get_keywords(), async=True)
+
+    # Run the stream continually, try again on failure
+    while True:
+        try:
+            myStream.filter(track=get_keywords(), async=True)
+        except:
+            continue
 
