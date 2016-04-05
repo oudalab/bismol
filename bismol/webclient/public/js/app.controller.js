@@ -239,6 +239,12 @@
 		//drag/drop functions
 		function dragstarted(d) {
 		  	d3.event.sourceEvent.stopPropagation();
+
+		  	var self = this;
+		  	main.selectAll("circle")
+		  		.filter(function (x) { return self != this; })
+			    .style("opacity", ".05");
+
 		  	d3.select(this).classed("dragging", true);
 		}
 
@@ -252,6 +258,10 @@
 
 		function dragended(d) {
 			socket.emit('point changed', d);
+			
+			main.selectAll("circle")
+				.style("opacity", "1.0");
+		  	
 		  	d3.select(this).classed("dragging", false);
 		}
 
