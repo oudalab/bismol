@@ -26,6 +26,9 @@ from sklearn.manifold import _barnes_hut_tsne
 from sklearn.utils.fixes import astype
 import rethinkdb as r
 from threading import Thread
+import datetime
+import time
+from datetime import datetime
 
 MACHINE_EPSILON = np.finfo(np.double).eps
 changes = []
@@ -442,6 +445,7 @@ def _gradient_descent(objective, p0, it, n_iter, objective_error=None,
                         })
 
             #insert data into the database, updating if it already exists
+            #print(time.time() * 1000)
             r.table("messages").insert(data, conflict="update").run(conn)
 
         if new_error is not None:

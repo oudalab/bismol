@@ -36,6 +36,7 @@
 		var toColor = toColor;
 		var svg;
 		var main;
+		var updatecounter = 0;
 
 		var socket = io.connect();
 
@@ -110,6 +111,9 @@
 
 		//draw chart
 		function drawChart() {
+			//var date = new Date();
+			//console.log(date.getTime());
+
 			//create scale functions
 			xScale = d3.scale.linear()
 			    .domain([d3.min(dataset, function(d) { return d.x; }), d3.max(dataset, function(d) { return d.x; })])
@@ -188,6 +192,8 @@
 
 		//update chart using animations
 		function updateChart(updates) {
+			//var date = new Date();
+			//console.log(date.getTime());
 			//update the x and y scales
 			xScale = d3.scale.linear()
 			    .domain([d3.min(updates, function(d) { return d.x; }), d3.max(updates, function(d) { return d.x; })])
@@ -197,11 +203,11 @@
 			    .domain([d3.min(updates, function(d) { return d.y; }), d3.max(updates, function(d) { return d.y; })])
 			    .range([ height - padding, padding ]);
 
-			//update the circle positions, animation them as they go
+			//update the circle positions, animating them as they go
 			main.selectAll("circle")
 			    .data(updates)
 			    .transition()
-			    .duration(6000)
+			    .duration(.24 * updates.length)
 			    .ease("linear")
 			    .attr("cx", function (d) { return xScale(d.x); })
 			    .attr("cy", function (d) { return yScale(d.y); });
@@ -220,13 +226,13 @@
 			//and then animate the x and y axis changes
 			main.select(".x.axis")
 				.transition()
-				.duration(6000)
+				.duration(.24 * updates.length)
 				.ease("linear")
 				.call(xAxis);
 
 			main.select(".y.axis")
 				.transition()
-				.duration(6000)
+				.duration(.24 * updates.length)
 				.ease("linear")
 				.call(yAxis);
 		}

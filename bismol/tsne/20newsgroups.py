@@ -1,6 +1,6 @@
 '''
-Usage: python3 20newsgroups.py
-Runs a tsne simulation on the 20newsgroups training set (11,314 elements)
+Usage: python3 20newsgroups.py number_of_newsgroups
+Runs a tsne simulation on the 20newsgroups training set (11,314 elements total)
 '''
 
 import sys
@@ -14,8 +14,37 @@ from tsne import mytsne
 from tsne.mytsne import trustworthiness
 
 #get 20 Newsgroups dataset
-categories = ['sci.electronics', 'sci.space', 'talk.politics.mideast', 'alt.atheism']
-twenty_train = fetch_20newsgroups(subset='train', shuffle=True, random_state = 42, categories = categories)
+categories = ['alt.atheism',
+ 'comp.graphics',
+ 'comp.os.ms-windows.misc',
+ 'comp.sys.ibm.pc.hardware',
+ 'comp.sys.mac.hardware',
+ 'comp.windows.x',
+ 'misc.forsale',
+ 'rec.autos',
+ 'rec.motorcycles',
+ 'rec.sport.baseball',
+ 'rec.sport.hockey',
+ 'sci.crypt',
+ 'sci.electronics',
+ 'sci.med',
+ 'sci.space',
+ 'soc.religion.christian',
+ 'talk.politics.guns',
+ 'talk.politics.mideast',
+ 'talk.politics.misc',
+ 'talk.religion.misc']
+
+#accept file arg
+try: 
+	num_categories = sys.argv[1]
+except:
+	print("Script run with invalid arguments")
+	print("Usage: python3 20newsgroups.py number_of_newsgroups")
+	print("Example Usage: python3 20newsgroups.py 4")
+	sys.exit(2)
+
+twenty_train = fetch_20newsgroups(subset='train', shuffle=True, random_state = 42, categories = categories[:int(num_categories)])
 
 #fit and transform the text into vector form using TF-IDF
 vectors = TfidfVectorizer().fit_transform(twenty_train.data)
