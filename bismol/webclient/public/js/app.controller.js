@@ -33,8 +33,13 @@
 		var mouseover = mouseover;
 		var mousemove = mousemove;
 		var mouseout = mouseout;
+		var svgMousedown = svgMousedown;
+		var svgMousemove = svgMousemove;
+		var svgMouseup = svgMouseup;
+		var svgMouseout = svgMouseout;
 		var toColor = toColor;
 		var svg;
+		var radius = 3;
 		var main;
 		var updatecounter = 0;
 
@@ -111,9 +116,6 @@
 
 		//draw chart
 		function drawChart() {
-			//var date = new Date();
-			//console.log(date.getTime());
-
 			//create scale functions
 			xScale = d3.scale.linear()
 			    .domain([d3.min(dataset, function(d) { return d.x; }), d3.max(dataset, function(d) { return d.x; })])
@@ -135,11 +137,16 @@
 				.ticks(0);
 
 			//create svg element
-			svg = d3.select("div")
+			svg = d3.select("#graph")
 				.append("svg")
 				.attr("width", width)
-				.attr("height", height)
-				.call(zoom);
+				.attr("height", height);
+				//.call(zoom);
+
+			svg.on("mousedown", svgMousedown)
+			   .on("mousemove", svgMousemove)
+			   .on("mouseup", svgMouseup)
+			   .on("mouseout", svgMouseout);
 
 			//create layer on top of svg to allow zoom/pan
 			main = svg.append("g")
@@ -153,9 +160,11 @@
 					.data(dataset)
 					.enter()
 					.append("circle")
+					.attr("class", "state")
+					.attr("id", function (d) { return d.id; })
 					.attr("cx", function (d) { return xScale(d.x); })
 					.attr("cy", function (d) { return yScale(d.y); })
-				    .attr("r", 3)
+				    .attr("r", radius)
 				    .style("fill", function(d) { return toColor(d.color); })
 				    .call(drag)
 				    .on("mouseover", mouseover)
@@ -168,9 +177,11 @@
 					.data(dataset)
 					.enter()
 					.append("circle")
-					.attr("cx", function (d) { return xScale(d.x); })
-					.attr("cy", function (d) { return yScale(d.y); })
-				    .attr("r", 3)
+					.attr("class", "state")
+					.attr("id", function(d) { d.id; })
+					.attr("cx", function(d) { return d.x; })
+					.attr("cy", function(d) { return d.y; })
+				    .attr("r", radius)
 				    .call(drag)
 				    .on("mouseover", mouseover)
 				    .on("mousemove", mousemove)
@@ -192,8 +203,6 @@
 
 		//update chart using animations
 		function updateChart(updates) {
-			//var date = new Date();
-			//console.log(date.getTime());
 			//update the x and y scales
 			xScale = d3.scale.linear()
 			    .domain([d3.min(updates, function(d) { return d.x; }), d3.max(updates, function(d) { return d.x; })])
@@ -246,32 +255,44 @@
 		function dragstarted(d) {
 		  	d3.event.sourceEvent.stopPropagation();
 
-		  	var self = this;
-		  	main.selectAll("circle")
-		  		.filter(function (x) { return self != this; })
-			    .style("opacity", ".05");
-
 		  	d3.select(this).classed("dragging", true);
 		}
 
 		function dragged(d) {
-		  	d3.select(this)
-		    	.attr("cx", d.x = d3.event.x)
-		    	.attr("cy", d.y = d3.event.y);
-		  	d.x = xScale.invert(d3.event.x);
-		  	d.y = yScale.invert(d3.event.y);
+			var selection = d3.selectAll('.selected');
+            svg.selectAll("rect.selection").remove();
+            if(selection[0].indexOf(this) == -1) {
+                selection = d3.select(this);
+                selection.classed("selected", true)
+                	.style("opacity", "1.0");
+                var self = this;
+                main.selectAll("circle")
+                	.filter(function (x) { return self != this; })
+                	.style("opacity", ".05");
+            }  
+            selection.each(function (d) {
+            	d.x = xScale.invert(xScale(d.x) + d3.event.dx);
+            	d.y = yScale.invert(yScale(d.y) + d3.event.dy);
+            });
+            selection
+            	.attr("cx", function (d) { return xScale(d.x); })
+			    .attr("cy", function (d) { return yScale(d.y); });
 		}
 
 		function dragended(d) {
-			socket.emit('point changed', d);
+			var selection = d3.selectAll('.selected');
+			selection.each(function (d) { 
+				socket.emit('point changed', d);
+			});
 			
 			main.selectAll("circle")
 				.style("opacity", "1.0");
+			d3.selectAll(".selected").classed("selected", false);
 		  	
 		  	d3.select(this).classed("dragging", false);
 		}
 
-		//mouseover functions for tooltip
+		//mouse functions for tooltip
 		function mouseover(d) {
 		  	tooltip.style("visibility", "visible");
 		}
@@ -283,6 +304,97 @@
 
 		function mouseout(d) {
 		  	tooltip.style("visibility", "hidden");
+		}
+
+		//mouse functions for multiselect
+		function svgMousedown() {
+			if(!d3.event.shiftKey) {
+                d3.selectAll(".selected")
+                	.classed("selected", false)
+                d3.selectAll("circle")
+                	.style("opacity", "1.0");
+            }
+
+            var p = d3.mouse(this);
+            svg.append("rect")
+               .attr({
+                    class   : "selection",
+                    x       : p[0],
+                    y       : p[1],
+                    width   : 0,
+                    height  : 0
+                });
+		}
+
+		function svgMousemove() {
+			var s = svg.select("rect.selection");
+            if(!s.empty()) {
+                var p = d3.mouse(this),
+                    d = {
+                        x       : parseFloat(s.attr("x")),
+                        y       : parseFloat(s.attr("y")),
+                        width   : parseFloat(s.attr("width")),
+                        height  : parseFloat(s.attr("height"))
+                    },
+                    move = {
+                        x : p[0] - d.x,
+                        y : p[1] - d.y
+                    };
+                if(move.x < 1 || (move.x * 2 < d.width)) {
+                    d.x = p[0];
+                    d.width -= move.x;
+                } else {
+                    d.width = move.x;       
+                }
+
+                if(move.y < 1 || (move.y * 2 < d.height)) {
+                    d.y = p[1];
+                    d.height -= move.y;
+                } else {
+                    d.height = move.y;       
+                }
+                s.attr(d);
+                d3.selectAll(".state").each(function(state_data, i) {
+                    if(!d3.select(this).classed("selected") && 
+                        //inner circle inside selection frame
+                        xScale(state_data.x) - radius >= d.x && xScale(state_data.x) + radius <= d.x + d.width && 
+                        yScale(state_data.y) - radius >= d.y && yScale(state_data.y) + radius <= d.y + d.height)
+	                    {
+	                        d3.select(this)
+		                        .classed("selection", true)
+		                        .classed("selected", true);
+		                    d3.selectAll(".state").each(function(data) {
+		                    	if(!d3.select(this).classed("selected")) {
+		                    		d3.select(this)
+		                    			.style("opacity", ".05");
+		                    	}
+		                    	else {
+		                    		d3.select(this)
+		                    			.style("opacity", "1.0");
+		                    	}
+		                    });
+	                    }
+                });
+            }
+		}
+
+		function svgMouseup() {
+			//remove selection frame
+            svg.selectAll("rect.selection").remove();
+
+            //remove temporary selection marker class
+            d3.selectAll('.state.selection').classed("selection", false);
+		}
+
+		function svgMouseout() {
+			if(d3.event.relatedTarget != null && d3.event.relatedTarget.tagName != null 
+				&& d3.event.relatedTarget.tagName == 'HTML') {
+                //remove selection frame
+                svg.selectAll("rect.selection").remove();
+
+                //remove temporary selection marker class
+                d3.selectAll('.state.selection').classed("selection", false);
+            }
 		}
 
 		function toColor(d) {

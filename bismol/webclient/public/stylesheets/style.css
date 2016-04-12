@@ -46,6 +46,17 @@ circle.dragging {
   stroke: brown;
 }
 
+rect.selection {
+  stroke: black;
+  stroke-dasharray: 4px;
+  stroke-opacity: 0.9;
+  fill: transparent;
+}
+
+.selected {
+  fill: red;
+}
+
 html {
   height: 100%;
 }
