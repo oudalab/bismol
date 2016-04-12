@@ -11,7 +11,7 @@ To run and visualize t-SNE with our data, follow these steps:
 
 4. In a new terminal window, run the command "DEBUG=myapp:* npm start" to start the node server. The server is now ready to respond to changes in the database.
 
-5. Open up your web browser and visit "http://localhost:8099". This is the port that node is monitoring.
+5. Open Google Chrome and visit "http://localhost:8099". This is the port that node is monitoring. Note that Google Chrome is the only browser that has been tested to work correctly. Other browsers may exhibit unanticipated behaviors.
 
 6. In a new terminal window, type "python3 tsnetest.py file_type ~/path/to/inputfile" (e.g. "python3 tsnetest.py neel ~/Documents/Programming/NEEL2016-training.tsv"). This will start the t-SNE algorithm and trigger the database updates that will then be rendered in your browser.  
 
