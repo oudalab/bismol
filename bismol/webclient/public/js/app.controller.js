@@ -21,9 +21,14 @@
 		var xAxis;
 		var yAxis;
 		var dataset = [];
-		var width = window.innerWidth * (5/6);
+		$scope.topOutliers = [];
+		$scope.bottomOutliers = [];
+		$scope.outlierChoice = "High Outliers";
+		$scope.refresh = refresh;
+		var width = window.innerWidth * (7/10);
 		var height = window.innerHeight * (5/6);
 		var padding = 30;
+		var sortPoints = sortPoints;
 		var drawChart = drawChart;
 		var updateChart = updateChart;
 		var zoomed = zoomed;
@@ -77,6 +82,8 @@
 				isCreated = true;
 				drawChart();
 			}
+
+			$scope.refresh();
 		});
 
 		socket.on('dbchanged', function(data) {
@@ -109,10 +116,31 @@
 			//this ensures that we update the chart only once once 'cycle' of database updates has been processed
 			//(i.e., once each row has finished updating, then update the chart)
 		    if(counter % dataset.length == 0 && isCreated) {
+		    	sortPoints(dataset);
+		    	$scope.bottomOutliers = dataset.slice(0, 10);
+		    	$scope.topOutliers = dataset.slice(-10);
+		    	$scope.$apply();
 		    	counter = 0;
 		    	updateChart(dataset);
 		    }
 		});
+
+		//handle displaying outliers on page refresh
+		function refresh() {
+			if(dataset.length > 0) {
+				sortPoints(dataset);
+				$scope.bottomOutliers = dataset.slice(0, 10);
+			    $scope.topOutliers = dataset.slice(-10);
+			    $scope.$apply();
+			}
+		}
+
+		//sort dataset by distance moved
+		function sortPoints(points) {
+		    points.sort(function(p1, p2) {
+		    	return p1.distance - p2.distance;
+		    });
+		}
 
 		//draw chart
 		function drawChart() {

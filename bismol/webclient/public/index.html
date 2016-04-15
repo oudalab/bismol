@@ -14,9 +14,29 @@
    </head>
    
    <body ng-controller="appController">
-      <div class='content'>
-         <h1>t-SNE Visualization</h1>
-         <div id='graph'></div><!-- the chart goes here-->
+      <h1>t-SNE Visualization</h1>
+      <div id="graph"></div><!-- the chart goes here-->
+      <div id="graphSidebar">
+         <h3>Outliers</h3>
+         <label>
+            <input type="radio" name="outlierChoice" ng-model="outlierChoice" value="High Outliers">
+            High Outliers
+         </label>
+         <label>
+            <input type="radio" name="outlierChoice" ng-model="outlierChoice" value="Low Outliers">
+            Low Outliers
+         </label>
+         <!--list bound to outliers on scope-->
+         <ol ng-show="outlierChoice == 'High Outliers'">
+            <li ng-repeat="outlier in topOutliers" ng-cloak>
+               <strong>(ID: {{outlier.id}})</strong>: {{outlier.distance | number:3}}. {{outlier.text | limitTo:100}}...
+            </li> 
+         </ol>
+         <ol ng-show="outlierChoice == 'Low Outliers'">
+            <li ng-repeat="outlier in bottomOutliers" ng-cloak>
+               <strong>(ID: {{outlier.id}})</strong>: {{outlier.distance | number:3}}. {{outlier.text | limitTo:100}}...
+            </li>
+         </ol>
       </div>
       <script src="js/app.module.js"></script>
       <script src="js/app.controller.js"></script>

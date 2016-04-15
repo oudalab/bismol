@@ -25,6 +25,7 @@ from sklearn.manifold import _utils
 from sklearn.manifold import _barnes_hut_tsne
 from sklearn.utils.fixes import astype
 import rethinkdb as r
+import math
 from threading import Thread
 import datetime
 import time
@@ -32,6 +33,7 @@ from datetime import datetime
 
 MACHINE_EPSILON = np.finfo(np.double).eps
 changes = []
+point_distances = []
 
 
 def _joint_probabilities(distances, desired_perplexity, verbose):
@@ -334,6 +336,8 @@ def _gradient_descent(objective, p0, it, n_iter, objective_error=None,
     """
     #connect to database
     conn = r.connect(host="localhost", port=28015, db="messagedb")
+    #keep track of total distance each point has moved
+    global point_distances
 
     if args is None:
         args = []
@@ -430,6 +434,7 @@ def _gradient_descent(objective, p0, it, n_iter, objective_error=None,
                             "id": tempUrl,
                             "x": embedded_array[idx][0],
                             "y": embedded_array[idx][1],
+                            "distance": point_distances[idx],
                             "text": text[idx],
                             "color": colors[idx],
                             "modified_by": "server"
@@ -440,13 +445,20 @@ def _gradient_descent(objective, p0, it, n_iter, objective_error=None,
                             "id": tempUrl,
                             "x": embedded_array[idx][0],
                             "y": embedded_array[idx][1],
+                            "distance": point_distances[idx],
                             "text": text[idx],
                             "modified_by": "server"
                         })
 
             #insert data into the database, updating if it already exists
-            #print(time.time() * 1000)
-            r.table("messages").insert(data, conflict="update").run(conn)
+            results = r.table("messages").insert(data, conflict="update", return_changes="always").run(conn)
+
+            for k in range(len(results["changes"])):
+                if results["changes"][k]["old_val"] == None:
+                    break
+                delta = math.sqrt(math.pow(results["changes"][k]["new_val"]["x"] - results["changes"][k]["old_val"]["x"], 2) +
+                math.pow(results["changes"][k]["new_val"]["y"] - results["changes"][k]["old_val"]["y"], 2))
+                point_distances[k] += delta
 
         if new_error is not None:
             error = new_error
@@ -781,10 +793,13 @@ class TSNE(BaseEstimator):
         # The embedding is initialized with iid samples from Gaussians with
         # standard deviation 1e-4.
 
+        global point_distances
+        point_distances = [0] * len(self.urls)
         # begin monitoring the database for changes
         thread = Thread(target=_get_changes, args=("messages",))
         thread.setDaemon(True)
         thread.start()
+
 
         if X_embedded is None:
             # Initialize embedding randomly
