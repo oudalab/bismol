@@ -241,13 +241,25 @@
 			    .range([ height - padding, padding ]);
 
 			//update the circle positions, animating them as they go
-			main.selectAll("circle")
-			    .data(updates)
-			    .transition()
-			    .duration(.24 * updates.length)
-			    .ease("linear")
-			    .attr("cx", function (d) { return xScale(d.x); })
-			    .attr("cy", function (d) { return yScale(d.y); });
+			if(hasColor) {
+				main.selectAll("circle")
+				    .data(updates)
+				    .transition()
+				    .duration(.24 * updates.length)
+				    .ease("linear")
+				    .style("fill", function(d) { return toColor(d.color); })
+				    .attr("cx", function (d) { return xScale(d.x); })
+				    .attr("cy", function (d) { return yScale(d.y); });
+			}
+			else {
+				main.selectAll("circle")
+				    .data(updates)
+				    .transition()
+				    .duration(.24 * updates.length)
+				    .ease("linear")
+				    .attr("cx", function (d) { return xScale(d.x); })
+				    .attr("cy", function (d) { return yScale(d.y); });
+			}
 
 			//update the x and y axis values
 			xAxis = d3.svg.axis()
