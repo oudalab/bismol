@@ -6,12 +6,14 @@ Runs a tsne simulation on the 20newsgroups training set (11,314 elements total)
 import sys
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.decomposition import TruncatedSVD
+from sklearn.manifold import TSNE
 import numpy as np
 from sklearn.datasets import fetch_20newsgroups
 sys.path.append("..")
 import tsne
 from tsne import mytsne
 from tsne.mytsne import trustworthiness
+import time
 
 #get 20 Newsgroups dataset
 categories = ['alt.atheism',
