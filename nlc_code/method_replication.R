@@ -19,6 +19,7 @@ library(RCurl)
 library(rjson)
 library(lubridate)
 library(gdata)
+library(utils)
 
 ######## Authenticate API connection ##########
 ###### Using cred from Miscarriage Project ### 
@@ -96,13 +97,56 @@ urls<-gsub(urls, ",", "")
   
 browseURL(urls[3], browser=getOption("Chrome"))
 
-## based on preliminary analyses, I don't think it's possible to gather ground truth data through blogs
+## based on preliminary analyses, I don't think it's possible to gather ground truth data through blogs...
+## Seems to be quite a few soundcloud accounts linked to users, however
 
 
 
-############# Testing methods: Linking s ####################
+############# Testing methods: Tracking users' location ####################
+
+turk_users_part<-turk_users[sample(which(turk_users$location!=""), 100, replace=FALSE),]
+
+turk_users_part$location_new<-NA
+
+for(i in 1:100){
+  location<-unlist(strsplit(turk_users_part$location[i], " "))
+  if(location[1]=="New" | location[1]=="new" | location[1]=="bay" | location[1]=="Bay" | 
+     location[1]=="Las" | location[1]=="las" | location[1]=="El" | location[1]==
+     "el"){
+    turk_users_part$location_new[i]<- as.character(paste(location[c(1,2)], sep=" ", collapse = " "))
+  }
+  else{
+    turk_users_part$location_new[i]<-location
+  }
+}
+
+turk_users_part$location_new<-gsub(",", "", turk_users_part$location_new)
+turk_users_part$location_new<-gsub("-", "", turk_users_part$location_new)
+turk_users_part$location_new<-gsub("+", "", turk_users_part$location_new)
+turk_users_part$location_new<-gsub(" ", "+", turk_users_part$location_new)
 
 
+
+## Help using the Google Maps API here: https://developers.google.com/maps/documentation/geocoding/start?csw=1#Geocoding
+## limit: 2.5K requests per day
+
+gm_api_key<-"AIzaSyDTWoQcb0a276MISAV0frT-iZGLO5ZHbTM"
+
+
+geo_details<- function(location){
+  url_for_request<- paste("https://maps.googleapis.com/maps/api/geocode/json?address=", location, "&key=", gm_api_key, sep="")
+
+  return(fromJSON(getURL(url_for_request)))
+}
+
+
+result <- vector("list", 100) 
+
+
+
+for(i in 1:100){
+  result[[i]]<-geo_details(turk_users_part$location_new[[i]])
+}
 
 ############# Testing methods: Linking census/surname to users ####################
 
