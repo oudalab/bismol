@@ -56,15 +56,15 @@ setup_twitter_oauth(consumer_key, consumer_secret, access_token, access_token_se
 epic<-read.csv("C:/Users/ninac2/Documents/ground_truth_data/EPIC_groundTruth_data.csv", stringsAsFactors=FALSE)  #self-report survey (for gender, race/ethnicity)
 mturk<-read.csv("C:/Users/ninac2/Documents/ground_truth_data/MTurk_groundTruth_data.csv", stringsAsFactors=FALSE) #Mechanical turk survey 
 
+## Pull IDs from a random ID sample (available from previous project)
+ids<-read.table("userIDSample_2014_08.txt")
+ids<-as.character(ids[,1])
 
-############### Helpful source code for gathering user information ###############
-########### Provides more metadata than prepackaged TwitteR functions ############
+set.seed(234)
+ids_samp<-sample(ids, 10000,replace=FALSE)
 
-source("C:/Users/ninac2/Documents/bismol/nlc_code/api_source_code/parsing_functions.R")
-source("C:/Users/ninac2/Documents/bismol/nlc_code/api_source_code/get_user_info.R")
-source("C:/Users/ninac2/Documents/bismol/nlc_code/api_source_code/get_user_timeline.R")
-source("C:/Users/ninac2/Documents/bismol/nlc_code/api_source_code/get_user_network.R")
-source("C:/Users/ninac2/Documents/bismol/nlc_code/api_source_code/collect_user_data.R")
+random_users<-lookupUsers(as.character(ids_samp), includeNA = FALSE)
+random_users<-twListToDF(random_users)
 
 
 
@@ -104,34 +104,44 @@ browseURL(urls[3], browser=getOption("Chrome"))
 
 ############# Testing methods: Tracking users' location ####################
 
-turk_users_part<-turk_users[sample(which(turk_users$location!=""), 100, replace=FALSE),]
+## How many users actually have listed locations?
+## How many of these locations are usable?
+## Use new random users for this segment 
 
-turk_users_part$location_new<-NA
+## Keep users who have a listed location and whose chosen language is english 
+random_users_part<-random_users[which(random_users$location!="" & random_users$lang=="en"),]
 
-for(i in 1:100){
-  location<-unlist(strsplit(turk_users_part$location[i], " "))
-  if(location[1]=="New" | location[1]=="new" | location[1]=="bay" | location[1]=="Bay" | 
-     location[1]=="Las" | location[1]=="las" | location[1]=="El" | location[1]==
-     "el"){
-    turk_users_part$location_new[i]<- as.character(paste(location[c(1,2)], sep=" ", collapse = " "))
+## subsample further to check results by hand?
+random_users_part<-random_users_part[sample(1:dim(random_users_part)[1], 100),]
+
+random_users_part$location<-sub(",", "", random_users_part$location)
+random_users_part$location<-sub("-", " ", random_users_part$location)
+random_users_part$location<-sub("+", " ", random_users_part$location)
+random_users_part$location<-sub("|", " ", random_users_part$location)
+random_users_part$location<-sub("/", " ", random_users_part$location)
+random_users_part$location<-trimws(random_users_part$location)
+
+
+random_users_part$location_new<-NA
+
+for(i in 1:dim(random_users_part)[1]){
+  location<-unlist(strsplit(random_users_part$location[i], " "))
+  if(length(location)>1){
+    random_users_part$location_new[i]<- as.character(paste(location[c(1,2)], sep=" ", collapse = " "))
   }
   else{
-    turk_users_part$location_new[i]<-location
+    random_users_part$location_new[i]<-location
   }
 }
 
-turk_users_part$location_new<-gsub(",", "", turk_users_part$location_new)
-turk_users_part$location_new<-gsub("-", "", turk_users_part$location_new)
-turk_users_part$location_new<-gsub("+", "", turk_users_part$location_new)
-turk_users_part$location_new<-gsub(" ", "+", turk_users_part$location_new)
 
+random_users_part$location_new<-gsub(" ", "+", random_users_part$location_new)
 
 
 ## Help using the Google Maps API here: https://developers.google.com/maps/documentation/geocoding/start?csw=1#Geocoding
 ## limit: 2.5K requests per day
 
 gm_api_key<-"AIzaSyDTWoQcb0a276MISAV0frT-iZGLO5ZHbTM"
-
 
 geo_details<- function(location){
   url_for_request<- paste("https://maps.googleapis.com/maps/api/geocode/json?address=", location, "&key=", gm_api_key, sep="")
@@ -140,13 +150,74 @@ geo_details<- function(location){
 }
 
 
-result <- vector("list", 100) 
+result <- vector("list", length(random_users_part$location_new)) 
 
-
-
-for(i in 1:100){
-  result[[i]]<-geo_details(turk_users_part$location_new[[i]])
+for(i in 1:length(random_users_part$location_new)){
+  result[[i]]<-geo_details(random_users_part$location_new[[i]])
 }
 
+formatted_address<-NULL
+for(i in 1:length(result)){
+  if(length(result[[i]]$results)<1){
+    address<-"NA"
+  }
+  else{
+    address<-result[[i]]$results[[1]]$formatted_address
+  }
+  formatted_address<-c(formatted_address, address)
+}
+
+
+
+test<-as.data.frame(cbind(random_users_part$location_new, formatted_address))
+sum(1,1,1,1,1,1,1,1,1,1,1,1,1)+length(which(test[,2]=="NA"))
+
+### Prop of users with listed location (and lang. is EN): 0.579
+### Estimated prop of users with accurate location in that subsample: 0.83
+### Overall, we might hope to catch 48.1% of all users sampled with this method
+
+## note: not all of these are areas smaller than a locality (although they include geocoordinate bounding boxes), and the system I'm using to parse the fields is pretty crude
+
+
 ############# Testing methods: Linking census/surname to users ####################
+
+
+## R package gender allows you to match gender & name, specifying DOB range and historical dataset/method (ssa, ipums, more...)
+## Again, I'll use the totally random sample
+
+random_users_name<-random_users[which(random_users$lang=="en"),]
+
+
+random_users_name$new_name<-NA
+for(i in 1:dim(random_users_name)[1]){
+  random_users_name$new_name[i]<-unlist(strsplit(random_users_name$name[i], " "))[1]
+}
+
+random_users_name$new_name<-tolower(random_users_name$new_name)
+random_users_name<-random_users_name[,c(7,18)]
+random_users_name$new_name<-tolower(random_users_name$new_name)
+
+## The vast majority of twitters are between 18 and 65 years old (see Pew Demographics of social media users 2015)
+## All but 6% were born after 1950.  We'll set the minimum search record year to 1940
+
+
+random_users_name$gender<-NA
+for(i in 1:dim(random_users_name)[1]){
+    gender_new<-gender(unique(as.character(random_users_name$new_name[i])), years = c(1940, 2012), method = c("ssa", "ipums", "napp","kantrowitz", "genderize", "demo"), countries = c("United States", "Canada","United Kingdom"))
+    if(dim(gender_new)[1]==1){
+      random_users_name$gender[i]<-gender_new$gender
+    }
+    else{
+      random_users_name$gender[i]<-NA
+    }
+}
+gender_test<-gender(unique(as.character(random_users_name$new_name)), years = c(1940, 2012), method = c("ssa", "ipums", "napp",
+                                                "kantrowitz", "genderize", "demo"), countries = c("United States", "Canada",
+                                                                                                  "United Kingdom"))
+
+
+## Able to capture 36.4% of users with this method. Not sure if those names are accurate 
+
+
+
 
