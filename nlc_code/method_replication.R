@@ -208,15 +208,26 @@ for(i in 1:dim(random_users_name)[1]){
       random_users_name$gender[i]<-gender_new$gender
     }
     else{
-      random_users_name$gender[i]<-NA
+      random_users_name$gender[i]<-ANw
     }
+    print(paste("Done with user", i, sep=" "))
 }
-gender_test<-gender(unique(as.character(random_users_name$new_name)), years = c(1940, 2012), method = c("ssa", "ipums", "napp",
-                                                "kantrowitz", "genderize", "demo"), countries = c("United States", "Canada",
-                                                                                                  "United Kingdom"))
+
+random_users_name_coded<-random_users_name[which(!is.na(random_users_name$gender)),]  
+## Able to capture 41.11% of users with this method
 
 
-## Able to capture 36.4% of users with this method. Not sure if those names are accurate 
+name_samp<-random_users_name_coded[sample(1:3662, 100, replace=FALSE),]  # evaluate users by hand
+
+
+## Evaluation of accuracy: only two out of 100 sampled are aggregiously off (~98% accuracy)
+## One other confusion: (Bristol Rovers is a soccer team, not a person - but it's also a verified account, so filtering that out might have caught it)
+## Overall might capture 40.2% of total users 
+
+
+
+
+
 
 
 
