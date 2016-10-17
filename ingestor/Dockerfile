@@ -1,24 +1,15 @@
 
-FROM ubuntu:wily
+FROM alpine:latest
 MAINTAINER cgrant@ou.edu
 
-# Help https://docs.docker.com/engine/installation/linux/ubuntulinux/
-RUN apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+RUN apk update && apk add ca-certificates bash
 
-# Install Postgres
-# Help: https://docs.docker.com/engine/examples/postgresql_service/
-RUN apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8
-RUN echo "deb https://apt.postgresql.org/pub/repos/apt/ wily-pgdg main" > /etc/apt/sources.list.d/pgdg.list
-RUN echo "deb https://apt.dockerproject.org/repo ubuntu-wily main" > /etc/apt/sources.list.d/docker.list
+RUN apk add git python3-dev gcc g++ make tmux imagemagick-dev freetype-dev make gfortran
+# https://github.com/docker-library/python/issues/112
+RUN ln -s locale.h /usr/include/xlocale.h
+RUN pip3 install --upgrade pip setuptools && pip3 install cython tweepy numpy matplotlib pandas
 
-RUN apt-get install -y apt-transport-https
-RUN apt-get update && apt-get install -y python-software-properties software-properties-common postgresql-9.5 postgresql-client-9.5 postgresql-contrib-9.5 postgresql-contrib-9.5 postgresql-plpython3-9.5 postgresql-9.5-postgis-scripts postgresql-hll postgresql-client-common postgresql-server-dev-9.5 postgresql-common
-# Install python
-RUN apt-get install -y python-pip python3 python-tweepy python-matplotlib-data python-numpy python-pandas python-psycopg2 python3-setuptools
-
-RUN apt-get install -y python3-pip
-
-RUN pip3 install tweepy psycopg2
+RUN apk add postgresql-dev && pip3 install --upgrade psycopg2
 
 # Copy over a keyword file
 COPY ingestor/key-words.json /key-words.json
