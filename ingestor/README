@@ -1,4 +1,10 @@
 
+
+  docker build -t cegme/ingestor .
+
+
+### Note the code below is for Dockerfile.ubuntu
+
 Run this from the bismol folder abive ingestor and peptodb
 
 Set the username and passwords in ingestor/ingestor.env
@@ -6,7 +12,7 @@ Note the PG Host is the host location of the peptodb database.
 
 ## Build container
 
-    docker build -t oudalab/gettweets -f ingestor/Dockerfile .
+    docker build -t oudalab/gettweets -f ingestor/Dockerfile.ubuntu .
 
 ## Run Ingestor container
 
