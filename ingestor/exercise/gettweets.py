@@ -4,7 +4,6 @@ pull in tweets."""
 
 import argparse
 import io
-import json
 from json import dumps
 from os import environ
 import sys
@@ -12,7 +11,7 @@ import time
 import tweepy
 
 
-RUNID = environ.get('RUNID') or "DEFAULT"
+RUNID = environ.get('RUNID') or "EXERCISEDEFAULT"
 FILENAME = environ.get('TWEET_FILE') or \
         '/data/tweetsdb/tweet_{}.json'.format(time.strftime("%Y%m%d%H%M%S"))
 
@@ -28,12 +27,12 @@ FILENAME = environ.get('TWEET_FILE') or \
 # Connect to twitter.com/oudalab bismol app
 
 
-class HealthStreamListener(tweepy.StreamListener):
-    """Extended Steam listener for these health tweets."""
+class ExerciseStreamListener(tweepy.StreamListener):
+    """Extended Steam listener for these food tweets."""
 
     # def __init__(self,api=None):
     def __init__(self, api):
-        super(HealthStreamListener, self).__init__(api)  # Python 3
+        super(ExerciseStreamListener, self).__init__(api)  # Python 3
         self.twfile = io.open(FILENAME, 'w', encoding="utf-8")
         print('__init__ {}'.format(FILENAME), file=sys.stderr)
 
@@ -53,14 +52,10 @@ class HealthStreamListener(tweepy.StreamListener):
 
 
 # Get the twitter key words
-def get_keywords(kw_file='key-words.json'):
+def get_keywords(kw_file='exerciselist.txt'):
     """Makes an an exhaustive pair of keywords from both lists."""
-    with io.open(kw_file, 'r') as my_file:
-        kws = json.load(my_file)
-        words = ["{} {}".format(a.strip(), b.strip())
-                 for a in kws['column1'] for b in kws['column2']]
-        words += kws['diseases']
-        return words
+    with io.open(kw_file, 'r') as myf:
+        return [t.strip() for t in myf.readlines()]
 
 
 if __name__ == "__main__":
@@ -94,7 +89,7 @@ if __name__ == "__main__":
 
     api = tweepy.API(auth, compression=True, wait_on_rate_limit=True)
 
-    myStreamListener = HealthStreamListener(api)
+    myStreamListener = ExerciseStreamListener(api)
     myStream = tweepy.Stream(auth=api.auth, listener=myStreamListener)
 
     print("Keywords:\n{}".format(get_keywords()), file=sys.stderr)

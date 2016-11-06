@@ -1,0 +1,1 @@
+    docker build -t cegme/ingestor-exercise .
