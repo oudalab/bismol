@@ -20,16 +20,16 @@ mini golf
 miniature golf
 sailing
 samba
-surfing
-waltz
+surfing - couch
+surfing -internet
+surfing -web
+surfing -channel
 waltz -past
 waltz -into
 waltz -by
-waltzed
 waltzed -past
 waltzed -into
 waltzed -by
-waltzing
 waltzing -past
 waltzing -into
 waltzing -by
@@ -127,22 +127,18 @@ ballet exercises
 ballet practice
 barre
 fencing
-hike
 hike -wage
 hike -fare
 hike -price 
 hike -rent
-hiked
 hiked -wage
 hiked -fare
 hiked -price 
 hiked -rent
-hikes
 hikes -wage
 hikes -fare
 hikes -price 
 hikes -rent
-hiking
 hiking -wage
 hiking -fare
 hiking -price 
@@ -359,4 +355,4 @@ walk  train
 walk  distance 
 walk  competition
 walk  race
-walk  pace 
+walk  pace
