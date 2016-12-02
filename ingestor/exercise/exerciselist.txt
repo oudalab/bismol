@@ -1,10 +1,10 @@
-pool
 wii fit
 croquet
 darts
 pilates
 plank exercise
 yoga
+yoga -pants
 billiards
 cue sports
 cuesports
@@ -22,8 +22,17 @@ sailing
 samba
 surfing
 waltz
+waltz -past
+waltz -into
+waltz -by
 waltzed
+waltzed -past
+waltzed -into
+waltzed -by
 waltzing
+waltzing -past
+waltzing -into
+waltzing -by
 bowled
 bowling
 dance
@@ -79,13 +88,13 @@ tap dance
 tap dancing
 cheerleading
 baseball practice
-go hunting
-going hunting
+"go hunting"
+"going hunting"
 play baseball
 play softball
 played baseball
 playing baseball
-went hunting
+"went hunting"
 yard work
 kayaking
 mowing
@@ -95,15 +104,15 @@ skateboarding
 snorkeling
 whitewater
 punching bag
-jingle dance
-jingle dancing
+"jingle dance"
+"jingle dancing"
 bikram yoga
 hot yoga
 aerobics
 ballroom dancing
-stair climber
-stair master
-stair stepper
+"stair climber"
+"stair master"
+"stair stepper"
 stairmaster
 zumba
 exercise class
@@ -119,15 +128,30 @@ ballet practice
 barre
 fencing
 hike
+hike -wage
+hike -fare
+hike -price 
+hike -rent
 hiked
+hiked -wage
+hiked -fare
+hiked -price 
+hiked -rent
 hikes
+hikes -wage
+hikes -fare
+hikes -price 
+hikes -rent
 hiking
+hiking -wage
+hiking -fare
+hiking -price 
+hiking -rent
 practiced ballet
 practicing ballet
 skiing
 snowboard
 snowboarding
-stair step
 water skiing
 wrestling practice
 calisthenics
@@ -136,8 +160,8 @@ canoeing
 race walking
 wheelchair basketball
 tobagganing
-track meet
-track practice
+"track meet"
+"track practice"
 backpacking
 bobsledding
 broomball
@@ -166,7 +190,7 @@ rollerblade skating
 rollerblading
 scuba diving
 scubadiving
-skin diving
+"skin diving"
 skindiving
 sledding
 soccer practice
@@ -178,7 +202,8 @@ bicycling
 biking
 cycle zone
 rowing
-aquat fit
+aquafit
+"aqua fit"
 body conditioning
 crossfit
 jumping jacks
@@ -205,7 +230,7 @@ squats
 trx express
 ultimate frisbee
 water jogging
-work out
+"work out"
 workout
 work-out
 basketball practice
@@ -256,13 +281,13 @@ treadmill running
 swam
 swim
 swimming
-ski machine
+"ski machine"
 rock climbing
 jiu jitsu
 jiujitsu
 jujitsu
-jump rope
-jumping rope
+"jump rope"
+"jumping rope"
 karate class
 karate practice
 kick boxing
@@ -279,7 +304,7 @@ turbokick
 judo
 kickboxing
 martial arts
-rope jumping
+"rope jumping"
 water polo
 crewing
 handball
@@ -294,44 +319,44 @@ rappeling
 motocross
 spinning
 spin class
-a run
-run + exercise
-run + long
-run + short 
-run + 5K
-run + 10K
-run + 20K
-run + marathon
-run + train
-run + distance 
-run + competition
-run + race
-run + pace 
+"a run"
+run  exercise
+run  long
+run  short 
+run  5K
+run  10K
+run  20K
+run  marathon
+run  train
+run  distance 
+run  competition
+run  race
+run  pace 
 minute mile
 min mile
-a jog
-jog + exercise
-jog + long
-jog + short 
-jog + 5K
-jog + 10K
-jog + 20K
-jog + marathon
-jog + train
-jog + distance 
-jog + competition
-jog + race
-jog + pace 
-a walk
-walk + exercise
-walk + long
-walk + short 
-walk + 5K
-walk + 10K
-walk + 20K
-walk + marathon
-walk + train
-walk + distance 
-walk + competition
-walk + race
-walk + pace 
+"a jog"
+jog  exercise
+jog  long
+jog  short 
+jog  5K
+jog  10K
+jog  20K
+jog  marathon
+jog  train
+jog  distance 
+jog  competition
+jog  race
+jog  pace 
+"a walk"
+walk  exercise
+walk  long
+walk  short 
+walk  5K
+walk  10K
+walk  20K
+walk  marathon
+walk  train
+walk  distance 
+walk  competition
+walk  race
+walk  pace 
