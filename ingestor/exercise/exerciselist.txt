@@ -1,90 +1,3 @@
-#pac12gym
-@exposurebball
-@utahgymnastics
-12 gymnastics
-cleaning
-crowd surfing
-fare hike
-fare hikes
-happy dance
-happy hour
-happyhour
-minutes late
-ncaa gymnastics
-pool of
-ran around
-ran away
-ran errands
-ran for
-ran from
-ran into
-ran late
-ran out
-ran through
-ran to
-ran your
-run around
-run away
-run errands
-run for
-run from
-run into
-run late
-run out
-run through
-run to
-run wild
-run your
-running a
-running around
-running away
-running errands
-running for
-running from
-running into
-running late
-running nose
-running on
-running out
-running through
-running to
-running wild
-running your
-suu gymnastics
-the stars
-u gymnastics
-uber pool
-union pool
-utahgymnastics
-utes gymnastics
-wage hike
-wage hikes
-walk around
-walk away
-walk by
-walk down
-walk in
-walk ins
-walk into
-walk out
-walk past
-walked around
-walked away
-walked by
-walked down
-walked into
-walked out
-walked past
-walking around
-walking away
-walking by
-walking dead
-walking down
-walking into
-walking out
-walking past
-water running
-yoga pants
 pool
 wii fit
 croquet
@@ -122,9 +35,6 @@ drill team
 frisbee
 night club
 water volleyball
-walk 
-walked
-walking
 mopping
 sky diving
 snow mobiling
@@ -152,6 +62,7 @@ gymnastics
 hatha yoga
 horseback riding
 raking lawn
+raking leaves
 tai chi
 water aerobics
 belly dance
@@ -211,7 +122,6 @@ hike
 hiked
 hikes
 hiking
-jogging
 practiced ballet
 practicing ballet
 skiing
@@ -284,10 +194,13 @@ playing polo
 polo practice
 pull ups
 pullups
+chin-ups
+chinups
 push ups
 pushups
 sit ups
 situps
+crunches
 squats
 trx express
 ultimate frisbee
@@ -338,10 +251,6 @@ halfmarathon
 marathon training
 marathontraining
 orienteering
-a run
-ran
-running
-running workout
 treadmill
 treadmill running
 swam
@@ -374,3 +283,55 @@ rope jumping
 water polo
 crewing
 handball
+chopped wood
+chopping wood
+play cricket
+curling
+synchronized swimming
+hacky sack
+luge
+rappeling
+motocross
+spinning
+spin class
+a run
+run + exercise
+run + long
+run + short 
+run + 5K
+run + 10K
+run + 20K
+run + marathon
+run + train
+run + distance 
+run + competition
+run + race
+run + pace 
+minute mile
+min mile
+a jog
+jog + exercise
+jog + long
+jog + short 
+jog + 5K
+jog + 10K
+jog + 20K
+jog + marathon
+jog + train
+jog + distance 
+jog + competition
+jog + race
+jog + pace 
+a walk
+walk + exercise
+walk + long
+walk + short 
+walk + 5K
+walk + 10K
+walk + 20K
+walk + marathon
+walk + train
+walk + distance 
+walk + competition
+walk + race
+walk + pace 
