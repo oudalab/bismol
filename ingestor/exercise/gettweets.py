@@ -37,9 +37,14 @@ class ExerciseStreamListener(tweepy.StreamListener):
         print('__init__ {}'.format(FILENAME), file=sys.stderr)
 
     def on_status(self, status):
+        """This is depreciated and not actually used anymore"""
         # print('{}'.format(dumps(status._json)), file=sys.stderr)
         print('{}'.format(dumps(status._json)), file=self.twfile)
         sys.stderr.write('.')
+
+    def on_data(self, raw_data):
+        print('{}'.format(raw_data), file=self.twfile)
+        return True
 
     def on_error(self, status_code):
         if status_code == 420:
