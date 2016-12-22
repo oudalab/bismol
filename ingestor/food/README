@@ -1,1 +1,1 @@
-    docker build -t cegme/ingestor-exercise .
+    docker build -t cegme/ingestor-food .
