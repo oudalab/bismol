@@ -13,7 +13,7 @@ import tweepy
 
 RUNID = environ.get('RUNID') or "FOODDEFAULT"
 FILENAME = environ.get('TWEET_FILE') or \
-        '/data/tweetsdb/tweet_{}.json'.format(time.strftime("%Y%m%d%H%M%S"))
+        '/data/tweetsdb/tweet_food_{}.json'.format(time.strftime("%Y%m%d%H%M%S"))
 
 
 # Twitter API info:
@@ -68,9 +68,10 @@ def start(args):
     """Run the whole food scraper program block by block"""
 
     if None in (args.ck, args.at, args.cs, args.ats):
-        print("Error defining environment variables", file=sys.stderr)
+        print("Error defining environment variables, {}".format(args), file=sys.stderr)
         sys.exit()
 
+    
     args.ind = int(args.ind)
     args.b = int(args.b)
 
@@ -120,11 +121,11 @@ if __name__ == "__main__":
     PARSER.add_argument("-ats", "--accesstokensecret", dest="ats",
                         default=environ.get('TWITTER_ACCESS_TOKEN_SECRET'),
                         help="The twitter access token secret")
-    PARSER.add_argument("-ind", "--index", dest="index", type=int,
-                        default=environ.get('KEYWORD_INDEX') or 1,
+    PARSER.add_argument("-ind", "--index", dest="ind", type=int,
+                        default=environ.get('TWITTER_INDEX') or 1,
                         help="The index to the keyword set to be streamed")
-    PARSER.add_argument("-b", "--block", dest="block_size", type=int,
-                        default=environ.get('KEYWORD_BLOCK_SIZE') or -1,
+    PARSER.add_argument("-b", "--block", dest="b", type=int,
+                        default=environ.get('TWITTER_BLOCK_SIZE') or -1,
                         help="The index to the keyword set to be streamed")
 
     start(PARSER.parse_args())

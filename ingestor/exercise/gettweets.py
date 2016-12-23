@@ -13,7 +13,7 @@ import tweepy
 
 RUNID = environ.get('RUNID') or "EXERCISEDEFAULT"
 FILENAME = environ.get('TWEET_FILE') or \
-        '/data/tweetsdb/tweet_{}.json'.format(time.strftime("%Y%m%d%H%M%S"))
+        '/data/tweetsdb/tweet_exercise_{}.json'.format(time.strftime("%Y%m%d%H%M%S"))
 
 
 # Twitter API info:

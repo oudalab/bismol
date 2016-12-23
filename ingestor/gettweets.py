@@ -14,7 +14,7 @@ import tweepy
 
 RUNID = environ.get('RUNID') or "DEFAULT"
 FILENAME = environ.get('TWEET_FILE') or \
-        '/data/tweetsdb/tweet_{}.json'.format(time.strftime("%Y%m%d%H%M%S"))
+        '/data/tweetsdb/tweet_health_{}.json'.format(time.strftime("%Y%m%d%H%M%S"))
 
 
 # Twitter API info:
