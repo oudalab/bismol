@@ -107,14 +107,14 @@ if __name__ == "__main__":
     # English only tweets
     languages = ["en"]
     # US Bounding box
-    locations = [-125.4113785028, 24.686952412,
-                 -65.91796875, 49.382372787]
+    # locations = [-125.4113785028, 24.686952412,
+    #             -65.91796875, 49.382372787]
     # Run the stream continually, try again on failure
     while True:
         try:
             myStream.filter(track=get_keywords(),
                             languages=languages,
-                            locations=locations,
+                            # locations=locations,
                             async=True)
         except Exception as e:
             continue
