@@ -39,7 +39,7 @@ get_user_info <- function(user_ids, credential=NULL, rawdata=FALSE, datadir=""){
     
     if (queries_left>0){
       u <- paste(user_ids[start:end], collapse=",") # put usernames in correct format
-      uInfo[[r]] <- getUserInfo(u, is.ID=TRUE, bulk=TRUE, credential=cred, rawdata=rawData, datadir=dataDir)
+      uInfo[[r]] <- getUserInfo(u, is.ID=FALSE, bulk=TRUE, credential=cred, rawdata=rawData, datadir=dataDir)
       
     }
     else {

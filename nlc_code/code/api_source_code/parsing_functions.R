@@ -395,7 +395,7 @@ getUserInfo <- function(users, is.ID=FALSE, bulk=TRUE, credential=NULL, rawdata=
     ui.base.url <- "https://api.twitter.com/1.1/users/show.json?"
   }
   
-  if (is.ID){
+  if (is.ID==TRUE){  # MODDED THIS LINE 11/3/16
     ui.base.url <- paste(ui.base.url, "user_id=", sep="")
   } else {
     ui.base.url <- paste(ui.base.url, "screen_name=", sep="")

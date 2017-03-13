@@ -14,17 +14,17 @@ library(methods)
 library(base64enc)
 
 ## ADJUST TO LOCAL PROJECT
-workingDir <- "~/dc-user-centered-twitter/"
-projectDir <- "~/dc-user-centered-twitter/"
+workingDir <- "C:/Users/ninac2/Dropbox/miscarriage_project/"
+projectDir <- "C:/Users/ninac2/Dropbox/miscarriage_project/"
 
 ####################### Authentification #####################
 
 
 # Set up the API keys and secret (THIS IS APP AND PROJECT SPECIFIC)
-api_key = "An3JfLmBCAAJw64rZnkSQJifD"
-api_secret = "bSlEzNDKnbuiKJ3aKcmoUqGPGmmEUDlVlmB4fvRZgrVU0FOCVS"
-acc_token="1384800560-djYindcwXEX0YJ2veo19KzczqcAMzMwS6esxP7H"
-acc_token_secret="NtDYKyOK4k5TpgRcYazto08fLQX9Hac6CY1XI8xJcRTmp"
+api_key <- "K9hdoAOqZLTRvgkVLJz9IhMiX"
+api_secret<- "EJgiCTeV7MWzsLquNk9vQMk6cLEu0Fslz7yKdiQHq1hofB4hFr"
+acc_token<- "419220939-acWVGs8QC6GEgZXbZzvvKzV4QqohduFTmdh9jVHm"
+acc_token_secret<- "2kyY6AYVZSJhmoAE2NDegPVGS52LVi3UsFBjjWjFgVM4U"
 
 # Store the Twitter API oauth locations
 reqURL <- "https://api.twitter.com/oauth/request_token"
@@ -59,7 +59,7 @@ user.signature <- sign_oauth1.0(twitter.app,
                                 token_secret = acc_token_secret)
 
 # Save credential
-save(user.signature, file=paste(projectDir, "data/user_sig_roauth.rdata",sep=""))
+save(user.signature, file=paste(projectDir, "/user_sig_roauth.rdata",sep=""))
 
 # test to see if this authentification has worked 
 url <- "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=emmaspiro"
@@ -69,3 +69,4 @@ url <- "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=emma
 tmp <- GET(url = url, config=user.signature) 
 dat <- content(tmp, as="text")
 dat
+

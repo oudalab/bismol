@@ -53,7 +53,7 @@ get_user_timeline <- function(user_ids, credential=NULL, rawdata=FALSE, datadir=
       since.id=""
     }
     
-    res <- getUserTimeline(user_ids[r],is.ID=TRUE, since.id=since.id, 
+    res <- getUserTimeline(user_ids[r],is.ID=FALSE, since.id=since.id, 
                                   credential=cred, rawdata=rawData, datadir=dataDir)
     res$text <- cleanText(res$text)
     res$user_description <- cleanText(res$user_description)
