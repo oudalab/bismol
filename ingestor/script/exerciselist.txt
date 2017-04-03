@@ -1,0 +1,358 @@
+wii fit
+croquet
+darts
+pilates
+plank exercise
+yoga
+yoga -pants
+billiards
+cue sports
+cuesports
+play pool
+played pool
+playing pool
+shoot pool
+snooker
+chair exercise
+chair exercises
+fishing
+mini golf
+miniature golf
+sailing
+samba
+surfing - couch
+surfing -internet
+surfing -web
+surfing -channel
+waltz -past
+waltz -into
+waltz -by
+waltzed -past
+waltzed -into
+waltzed -by
+waltzing -past
+waltzing -into
+waltzing -by
+bowled
+bowling
+dance
+danced
+dances
+dancing
+drill dance
+drill team
+frisbee
+night club
+water volleyball
+mopping
+sky diving
+snow mobiling
+snowmobiling
+trampoline
+vacuuming
+archery
+golf
+golfing
+hang gliding
+play volleyball
+played volleyball
+playing volleyball
+v ball
+v-ball
+volleyball practice
+body sculpting
+ashtanga
+vinyasa
+hacky sack
+ping pong
+table tennis
+asanas
+gymnastics
+hatha yoga
+horseback riding
+raking lawn
+raking leaves
+tai chi
+water aerobics
+belly dance
+belly dancing
+flamenco
+hula
+swing dance
+swing dancing
+badminton
+weight lifting
+weights
+gardening
+tap dance
+tap dancing
+cheerleading
+baseball practice
+"go hunting"
+"going hunting"
+play baseball
+play softball
+played baseball
+playing baseball
+"went hunting"
+yard work
+kayaking
+mowing
+mowing lawn
+rafting
+skateboarding
+snorkeling
+whitewater
+punching bag
+"jingle dance"
+"jingle dancing"
+bikram yoga
+hot yoga
+aerobics
+ballroom dancing
+"stair climber"
+"stair master"
+"stair stepper"
+stairmaster
+zumba
+exercise class
+jazzercise
+paddleball
+shoveling snow
+slimnastics
+snow shoveling
+ballet class
+ballet classes
+ballet exercises
+ballet practice
+barre
+fencing
+hike -wage
+hike -fare
+hike -price 
+hike -rent
+hiked -wage
+hiked -fare
+hiked -price 
+hiked -rent
+hikes -wage
+hikes -fare
+hikes -price 
+hikes -rent
+hiking -wage
+hiking -fare
+hiking -price 
+hiking -rent
+practiced ballet
+practicing ballet
+skiing
+snowboard
+snowboarding
+water skiing
+wrestling practice
+calisthenics
+cardio
+canoeing
+race walking
+wheelchair basketball
+tobagganing
+"track meet"
+"track practice"
+backpacking
+bobsledding
+broomball
+kickball
+roller sk8ting
+roller skating
+rollerskating
+sk8ting
+ski jumping
+ski mobiling
+skimobiling
+sledding
+tobogganing
+ice sk8ting
+ice skating
+luging
+play soccer
+play tennis
+played soccer
+played softball
+played tennis
+playing soccer
+playing softball
+playing tennis
+rollerblade skating
+rollerblading
+scuba diving
+scubadiving
+"skin diving"
+skindiving
+sledding
+soccer practice
+softball practice
+tennis practice
+toboggan run
+tobogganing
+bicycling
+biking
+cycle zone
+rowing
+aquafit
+"aqua fit"
+body conditioning
+crossfit
+jumping jacks
+kettlebell
+lacrosse practice
+p90x
+play lacrosse
+play polo
+played lacrosse
+played polo
+playing lacrosse
+playing polo
+polo practice
+pull ups
+pullups
+chin-ups
+chinups
+push ups
+pushups
+sit ups
+situps
+crunches
+squats
+trx express
+ultimate frisbee
+water jogging
+"work out"
+workout
+work-out
+basketball practice
+bball practice
+b-ball practice
+beach volleyball
+bodyworks circuit
+circuit training
+hockey practice
+play basketball
+play bball
+play b-ball
+play hockey
+play hoops
+played basketball
+played bball
+played b-ball
+played hockey
+played hoops
+playing basketball
+playing bball
+playing b-ball
+playing hockey
+playing hoops
+snow shoeing
+streetballin
+streetballing
+wheelchair racing
+wheelchair running
+bmx
+mountain biking
+racquetball
+football practice
+play football
+played football
+playing football
+soulcycle
+boxing sparring
+boxing training
+elliptical 
+half marathon
+halfmarathon
+marathon training
+marathontraining
+orienteering
+treadmill
+treadmill running
+swam
+swim
+swimming
+"ski machine"
+rock climbing
+jiu jitsu
+jiujitsu
+jujitsu
+"jump rope"
+"jumping rope"
+karate class
+karate practice
+kick boxing
+play rugby
+played rugby
+playing rugby
+rugby practice
+tae kwan do
+taebo
+turbo jam
+turbo kick
+turbojam
+turbokick
+judo
+kickboxing
+martial arts
+"rope jumping"
+water polo
+crewing
+handball
+chopped wood
+chopping wood
+play cricket
+curling
+synchronized swimming
+hacky sack
+luge
+rappeling
+motocross
+spinning
+spin class
+"a run"
+run  exercise
+run  long
+run  short 
+run  5K
+run  10K
+run  20K
+run  marathon
+run  train
+run  distance 
+run  competition
+run  race
+run  pace 
+minute mile
+min mile
+"a jog"
+jog  exercise
+jog  long
+jog  short 
+jog  5K
+jog  10K
+jog  20K
+jog  marathon
+jog  train
+jog  distance 
+jog  competition
+jog  race
+jog  pace 
+"a walk"
+walk  exercise
+walk  long
+walk  short 
+walk  5K
+walk  10K
+walk  20K
+walk  marathon
+walk  train
+walk  distance 
+walk  competition
+walk  race
+walk  pace
