@@ -1,0 +1,248 @@
+eat vomit
+eat puke
+eat throw up
+eat tummy upset
+eat tummy pain
+eat abdominal pain
+eat stomach pain
+eat stomach upset
+eat sick
+eat nausea
+eat spew
+eat queasy
+eat indigestion
+eat spit up
+eat heartburn
+eat acidosis
+eat gastro
+eat food poisoning
+eat diarrhea
+eat abdominal pain
+eat the runs
+food vomit
+food puke
+food throw up
+food tummy upset
+food tummy pain
+food abdominal pain
+food stomach pain
+food stomach upset
+food sick
+food nausea
+food spew
+food queasy
+food indigestion
+food spit up
+food heartburn
+food acidosis
+food gastro
+food food poisoning
+food diarrhea
+food abdominal pain
+food the runs
+restaurant vomit
+restaurant puke
+restaurant throw up
+restaurant tummy upset
+restaurant tummy pain
+restaurant abdominal pain
+restaurant stomach pain
+restaurant stomach upset
+restaurant sick
+restaurant nausea
+restaurant spew
+restaurant queasy
+restaurant indigestion
+restaurant spit up
+restaurant heartburn
+restaurant acidosis
+restaurant gastro
+restaurant food poisoning
+restaurant diarrhea
+restaurant abdominal pain
+restaurant the runs
+restaurants vomit
+restaurants puke
+restaurants throw up
+restaurants tummy upset
+restaurants tummy pain
+restaurants abdominal pain
+restaurants stomach pain
+restaurants stomach upset
+restaurants sick
+restaurants nausea
+restaurants spew
+restaurants queasy
+restaurants indigestion
+restaurants spit up
+restaurants heartburn
+restaurants acidosis
+restaurants gastro
+restaurants food poisoning
+restaurants diarrhea
+restaurants abdominal pain
+restaurants the runs
+dinner vomit
+dinner puke
+dinner throw up
+dinner tummy upset
+dinner tummy pain
+dinner abdominal pain
+dinner stomach pain
+dinner stomach upset
+dinner sick
+dinner nausea
+dinner spew
+dinner queasy
+dinner indigestion
+dinner spit up
+dinner heartburn
+dinner acidosis
+dinner gastro
+dinner food poisoning
+dinner diarrhea
+dinner abdominal pain
+dinner the runs
+lunch vomit
+lunch puke
+lunch throw up
+lunch tummy upset
+lunch tummy pain
+lunch abdominal pain
+lunch stomach pain
+lunch stomach upset
+lunch sick
+lunch nausea
+lunch spew
+lunch queasy
+lunch indigestion
+lunch spit up
+lunch heartburn
+lunch acidosis
+lunch gastro
+lunch food poisoning
+lunch diarrhea
+lunch abdominal pain
+lunch the runs
+breakfast vomit
+breakfast puke
+breakfast throw up
+breakfast tummy upset
+breakfast tummy pain
+breakfast abdominal pain
+breakfast stomach pain
+breakfast stomach upset
+breakfast sick
+breakfast nausea
+breakfast spew
+breakfast queasy
+breakfast indigestion
+breakfast spit up
+breakfast heartburn
+breakfast acidosis
+breakfast gastro
+breakfast food poisoning
+breakfast diarrhea
+breakfast abdominal pain
+breakfast the runs
+supper vomit
+supper puke
+supper throw up
+supper tummy upset
+supper tummy pain
+supper abdominal pain
+supper stomach pain
+supper stomach upset
+supper sick
+supper nausea
+supper spew
+supper queasy
+supper indigestion
+supper spit up
+supper heartburn
+supper acidosis
+supper gastro
+supper food poisoning
+supper diarrhea
+supper abdominal pain
+supper the runs
+dine vomit
+dine puke
+dine throw up
+dine tummy upset
+dine tummy pain
+dine abdominal pain
+dine stomach pain
+dine stomach upset
+dine sick
+dine nausea
+dine spew
+dine queasy
+dine indigestion
+dine spit up
+dine heartburn
+dine acidosis
+dine gastro
+dine food poisoning
+dine diarrhea
+dine abdominal pain
+dine the runs
+Amebiasis
+Anisakiasis
+Ascariasis
+Anthrax
+Botulism
+Brainerd diarrhea
+Brucellosis
+Campylobacteriosis 
+Cholera
+Ciguatoxin
+Cronobacter
+Clostridium botulinum 
+Clostridium perfringens
+Cryptococcosis 
+Cryptosporidiosis 
+Cyclospora 
+Cysticercosis 
+Diphyllobothriasis 
+Diphyllobothrium infection
+E.coli
+Ecoli
+E coli
+Escherichia coli
+Giardiasis 
+Giardia infection 
+Helicobacter pylori
+Hepatitis A
+Intestinal roundworm infection
+Isosporiasis 
+Viral Hepatitis
+Leptospirosis
+Listeriosis 
+Listeria infection
+Norovirus
+Rat-bite fever
+Rotavirus
+salmonella
+Salmonella infection 
+Salmonellosis
+Shigellosis 
+Shigella infection
+Staphylococcus food poisoning 
+Staphylococcus aureus
+Toxoplasmosis 
+Toxoplasma infection
+Traveler's diarrhea
+Trichinellosis
+Trichinosis 
+Trichinella infection
+Typhoid Fever 
+Salmonella typhi infection
+Viral gastroenteritis
+Vibrio parahaemolyticus
+Vibrio vulnificus
+Vibrio cholerae infection
+Yersinia
+Yersinia enterocolitica infection
+Ciguatoxin
+Marine toxins
