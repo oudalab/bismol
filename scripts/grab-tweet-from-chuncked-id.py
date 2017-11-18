@@ -1,6 +1,17 @@
 #!/usr/bin/python3
 # encoding: utf-8
 
+"""
+Usage:
+    time python3 grab-tweet-from-chuncked-id.py  \
+            --consumerkey TWITTER_CONSUMER_KEY \
+            --consumersecret TWITTER_CONSUMER_SECRET \
+            --accesstoken TWITTER_ACCESS_TOKEN \
+            --accesstokensecret TWITTER_ACCESS_TOKEN_SECRET \
+            --file Exerciselist_ids.csv --chunk 100 \
+            | tee exercise.tweets.json | jq .text
+"""
+
 import argparse
 import csv
 import json
