@@ -3,7 +3,7 @@
 pull in tweets."""
 
 import argparse
-import io
+import gzip
 from json import dumps
 from os import environ
 import sys
@@ -13,7 +13,7 @@ import tweepy
 
 RUNID = environ.get('RUNID') or "USADEFAULT"
 FILENAME = environ.get('TWEET_FILE') or \
-        '/data/tweetsdb/tweet_africa_{}.json'.format(time.strftime("%Y%m%d%H%M%S"))
+        '/data/tweetsdb/tweet_africa_{}.json.gz'.format(time.strftime("%Y%m%d%H%M%S"))
 
 
 # Twitter API info:
@@ -27,23 +27,25 @@ FILENAME = environ.get('TWEET_FILE') or \
 # Connect to twitter.com/oudalab bismol app
 
 
-class FoodStreamListener(tweepy.StreamListener):
+class AfricaStreamListener(tweepy.StreamListener):
     """Extended Steam listener for these food tweets."""
 
     # def __init__(self,api=None):
     def __init__(self, api):
-        super(FoodStreamListener, self).__init__(api)  # Python 3
-        self.twfile = io.open(FILENAME, 'w', encoding="utf-8")
+        super(AfricaStreamListener, self).__init__(api)  # Python 3
+        self.twfile = gzip.open(FILENAME, 'wt', encoding="utf-8")
         print('__init__ {}'.format(FILENAME), file=sys.stderr)
 
     def on_status(self, status):
         """This is depreciated and not actually used anymore"""
         # print('{}'.format(dumps(status._json)), file=sys.stderr)
-        print('{}'.format(dumps(status._json)), file=self.twfile)
-        sys.stderr.write('.')
+        # print('{}'.format(dumps(status._json)), file=self.twfile)
+        self.twfile.write('{}\n'.format(dumps(status._json)))
+        # sys.stderr.write('.')
 
     def on_data(self, raw_data):
-        print('{}'.format(raw_data), file=self.twfile)
+        #print('{}'.format(raw_data), file=self.twfile)
+        self.twfile.write('{}\n'.format(raw_data))
         return True
 
     def on_error(self, status_code):
@@ -73,10 +75,8 @@ def start(args):
 
     api = tweepy.API(auth, compression=True, wait_on_rate_limit=True)
 
-    mystreamlistener = FoodStreamListener(api)
+    mystreamlistener = AfricaStreamListener(api)
     mystream = tweepy.Stream(auth=api.auth, listener=mystreamlistener)
-
-    print("Keywords:\n{}".format(get_keywords()), file=sys.stderr)
 
     # English only tweets
     languages = ["en"]
