@@ -41,13 +41,13 @@ class AfricaStreamListener(tweepy.StreamListener):
         # print('{}'.format(dumps(status._json)), file=sys.stderr)
         # print('{}'.format(dumps(status._json)), file=self.twfile)
         self.twfile.write('{}\n'.format(dumps(status._json)))
-        self.flush()
+        self.twfile.flush()
         # sys.stderr.write('.')
 
     def on_data(self, raw_data):
         #print('{}'.format(raw_data), file=self.twfile)
         self.twfile.write('{}\n'.format(raw_data))
-        self.flush()
+        self.twfile.flush()
         return True
 
     def on_error(self, status_code):
@@ -70,7 +70,6 @@ def start(args):
 
     
     args.ind = int(args.ind)
-    args.b = int(args.b)
 
     auth = tweepy.OAuthHandler(args.ck.strip(), args.cs.strip())
     auth.set_access_token(args.at.strip(), args.ats.strip())
